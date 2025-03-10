@@ -9,7 +9,7 @@ import {ElementPlusResolver} from 'unplugin-vue-components/resolvers'
 
 // 根据环境设置后端地址
 const backendUrl = process.env.NODE_ENV === 'production'
-  ? '120.55.165.76:9898'
+  ? 'https://service.qqqtx.com/api'
   : 'https://service.qqqtx.com/api';
 
 // https://vite.dev/config/
