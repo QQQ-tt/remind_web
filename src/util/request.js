@@ -27,7 +27,7 @@ instance.interceptors.response.use(
   function (response) {
     // 2xx 范围内的状态码都会触发该函数。
     // 对响应数据做点什么
-    if (response.data.code === 200) {
+    if (response.data.code === 200 && !response.config.noSuccessMsg) {
       ElMsg.successMsg(response.data.msg)
     }
     if (response.data.code != null && response.data.code !== 200) {
