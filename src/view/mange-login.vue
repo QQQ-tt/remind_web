@@ -1,10 +1,9 @@
 <script setup>
-import { User, Lock } from '@element-plus/icons-vue'
+import { Lock, User } from '@element-plus/icons-vue'
 import { ref } from 'vue'
-import { randomNum,msgRandomNum } from '@/api/test.js'
-/*import {loginApi} from '@/api/user'
-import {useUserStore, useUserTokenStore} from '@/stores/index'
-import router from "@/router/router";*/
+import { loginUser } from '@/api/login-api.js'
+import { useTokenStore } from '@/store/index'
+import router from '@/router/router'
 
 // 控制注册与登录表单的显示，默认显示注册
 const fromRegister = ref()
@@ -16,22 +15,17 @@ const registerData = ref({
 
 // 登录
 const login = async () => {
-  loading.value = true;
-  console.log('登录...',registerData.value.account);
-  await randomNum()
-  await msgRandomNum()
-  /*await fromRegister.value.validate()
-  console.log('登录...');
-  const result = await loginApi(registerData.value)
-  if (result.data.code === 200) {
-    const useUser = useUserTokenStore()
-    useUser.setToken(result.data.data.token, result.data.data.userId)
-    const user = useUserStore()
-    await user.getUser()
-    registerData.value = {}
-    await router.push({name: 'information'})
-  }
-  */
+  loading.value = true
+  await loginUser(registerData.value).then((result) => {
+    const data = result.data
+    const tokenStore = useTokenStore()
+    if (data.code === 200) {
+      const user = data.data
+      tokenStore.setToken(user.token, user.id, user.name)
+      registerData.value = {}
+      router.push({name: 'sys'})
+    }
+  })
   loading.value = false
 }
 </script>

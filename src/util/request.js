@@ -1,6 +1,6 @@
 import axios from 'axios'
-import ElMsg from '@/util/el-msg.js'
-import Router from '@/router/router.js'
+import ElMsg from '@/util/el-msg'
+import Router from '@/router/router'
 
 let baseURL = __BACKEND_URL__
 
