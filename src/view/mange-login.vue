@@ -1,7 +1,7 @@
 <script setup>
 import { User, Lock } from '@element-plus/icons-vue'
 import { ref } from 'vue'
-import { randomNum } from '@/api/test.js'
+import { randomNum,msgRandomNum } from '@/api/test.js'
 /*import {loginApi} from '@/api/user'
 import {useUserStore, useUserTokenStore} from '@/stores/index'
 import router from "@/router/router";*/
@@ -19,6 +19,7 @@ const login = async () => {
   loading.value = true;
   console.log('登录...',registerData.value.account);
   await randomNum()
+  await msgRandomNum()
   /*await fromRegister.value.validate()
   console.log('登录...');
   const result = await loginApi(registerData.value)
@@ -106,7 +107,7 @@ const login = async () => {
   background-color: #fff;
 
   .bg {
-    background: url('@/assets/GPaVPdLbQAAlW2f.jpg') no-repeat center;
+    background: url('@/asset/GPaVPdLbQAAlW2f.jpg') no-repeat center;
     background-size: cover;
     border-radius: 0 20px 20px 0;
   }
