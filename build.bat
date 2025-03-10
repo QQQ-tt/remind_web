@@ -1,9 +1,10 @@
 @echo off
 setlocal enabledelayedexpansion
+
 :: 服务器IP/域名
 set DEPLOY_HOST=qqqtx.com
 
-REM 检查dist文件夹是否存在并删除
+:: 检查并删除dist文件夹
 if exist "dist" (
   rmdir /S /Q "dist"
   echo delete dist success
@@ -11,20 +12,24 @@ if exist "dist" (
   echo dist is not exist
 )
 
-REM 运行npm命令
+:: 运行构建命令并检查错误
 call npm run build
-
+if errorlevel 1 (
+  echo 构建失败，终止部署
+  exit /b 1
+)
 echo npm run build is ok
 
-REM 使用ssh远程执行命令，删除远程目录
+:: 远程清理和创建目录
 ssh root@%DEPLOY_HOST% ^
-    "rm -rf /root/install/nginx/data/dist && "^
-    "mkdir /root/install/nginx/data "^
+    "rm -rf /root/install/nginx/data/dist && ^
+    mkdir -p /root/install/nginx/data"
 
-REM 请确保你已经配置了ssh密钥对以避免输入密码
+:: 确保配置了SSH密钥以避免密码输入
 REM 将以下命令中的IP、用户名、远程目录替换为实际信息
 scp -r ./dist root@%DEPLOY_HOST%:/root/install/nginx/data
 
+:: 设置文件权限
 ssh root@%DEPLOY_HOST% ^
     "chmod -R 755 /root/install/nginx/data/dist"
-echo build and send success
+echo 部署完成
