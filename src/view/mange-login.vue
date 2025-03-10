@@ -13,6 +13,8 @@ const registerData = ref({
   password: '',
 })
 
+const isRemember = ref(false) // 新增：控制"记住我"状态
+
 // 登录
 const login = async () => {
   loading.value = true
@@ -21,9 +23,11 @@ const login = async () => {
     const tokenStore = useTokenStore()
     if (data.code === 200) {
       const user = data.data
-      tokenStore.setToken(user.token, user.id, user.name)
+      tokenStore.setToken(user.token, user.id, user.name, isRemember.value)
+      router.push({ name: 'sys' })
       registerData.value = {}
-      router.push({name: 'sys'})
+    } else {
+      loading.value = false
     }
   })
   loading.value = false
@@ -57,7 +61,7 @@ const login = async () => {
         </el-form-item>
         <el-form-item class="flex">
           <div class="flex">
-            <el-checkbox>记住我</el-checkbox>
+            <el-checkbox v-model="isRemember">记住我</el-checkbox>
             <el-link type="primary" :underline="false">忘记密码？</el-link>
           </div>
         </el-form-item>
