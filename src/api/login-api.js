@@ -5,3 +5,7 @@ export function loginUser(e) {
     ...e
   })
 }
+
+export function testToken() {
+  return Request.get('remind/sysUser/testToken')
+}

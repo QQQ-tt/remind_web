@@ -1,6 +1,7 @@
 import axios from 'axios'
 import ElMsg from '@/util/el-msg'
 import Router from '@/router/router'
+import { useTokenStore } from '@/store/index'
 
 let baseURL = __BACKEND_URL__
 
@@ -14,6 +15,10 @@ instance.defaults.baseURL = baseURL
 instance.interceptors.request.use(
   function (config) {
     // 在发送请求之前做些什么
+    const userToken = useTokenStore()
+    if (userToken.info) {
+      config.headers.Authorization = `Bearer ${userToken.info.token}`
+    }
     return config
   },
   function (error) {
