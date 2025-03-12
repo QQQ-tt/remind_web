@@ -18,7 +18,7 @@ const router = createRouter({
     {
       path: '/sys',
       name: 'sys',
-      component: () => import('@/view/system/sys-user.vue'),
+      component: () => import('@/view/sys/sys-user.vue'),
     },
   ],
 })
