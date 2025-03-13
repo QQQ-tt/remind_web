@@ -18,28 +18,45 @@ const router = createRouter({
     {
       path: '/sys',
       name: 'sys',
-      component: () => import('@/view/sys/sys-user.vue'),
+      component: () => import('@/view/container/container-layout.vue'),
+      redirect: '/sys/user',
+      children: [
+        {
+          path: '/sys/user',
+          name: 'user',
+          component: () => import('@/view/sys/sys-user.vue'),
+        },
+        {
+          path: '/sys/role',
+          name: 'role',
+          component: () => import('@/view/sys/sys-role.vue'),
+        },
+        {
+          path: '/sys/resource',
+          name: 'menu',
+          component: () => import('@/view/sys/sys-resource.vue'),
+        },
+      ],
     },
   ],
 })
 
 router.beforeEach(async (to, from, next) => {
   const userToken = useTokenStore()
-  console.log(to)
   if (to.name === 'login' || to.path === '/') {
     if (userToken.info.token) {
       try {
-        const res = await testToken();
+        const res = await testToken()
         if (res.data.code === 200 && res.data.data) {
-          next({ name: 'sys' });
+          next({ name: 'sys' })
         } else {
-          userToken.removeToken();
-          next();
+          userToken.removeToken()
+          next()
         }
       } catch (error) {
-        ElMsg.warningMsg('登录状态异常，请重新登录');
-        userToken.removeToken();
-        next({ name: 'login' });
+        ElMsg.warningMsg('登录状态异常，请重新登录')
+        userToken.removeToken()
+        next({ name: 'login' })
         console.log(error)
       }
     } else {
@@ -48,8 +65,8 @@ router.beforeEach(async (to, from, next) => {
   } else if (userToken.info.token) {
     next()
   } else {
-    next({ name: 'login' });
-    ElMsg.warningMsg('请先登录');
+    next({ name: 'login' })
+    ElMsg.warningMsg('请先登录')
   }
 })
 

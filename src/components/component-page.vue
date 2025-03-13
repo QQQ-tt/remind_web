@@ -4,12 +4,12 @@ import { ref, watchEffect } from 'vue'
 const props = defineProps({
   listPage: {
     type: Function,
-    required: true
+    required: true,
   },
   total: {
     type: Number,
-    required: true
-  }
+    required: true,
+  },
 })
 
 const small = ref(false)
@@ -26,8 +26,7 @@ const setPageSize = (val) => {
 
 const triggerListPage = () => {
   loading.value = true
-  props.listPage(pageNum.value, pageSize.value)
-      .finally(() => loading.value = false)
+  props.listPage(pageNum.value, pageSize.value).finally(() => (loading.value = false))
 }
 
 const handleSizeChange = (val) => {
@@ -53,17 +52,17 @@ watchEffect(() => {
 
 <template>
   <el-pagination
-      v-model:current-page="pageNum"
-      v-model:page-size="pageSize"
-      :page-sizes="[10, 20, 50, 100]"
-      :small="small"
-      :disabled="disabled || loading"
-      :background="background"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="total"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      class="custom-pagination"
+    v-model:current-page="pageNum"
+    v-model:page-size="pageSize"
+    :page-sizes="[10, 20, 50, 100]"
+    :small="small"
+    :disabled="disabled || loading"
+    :background="background"
+    layout="total, sizes, prev, pager, next, jumper"
+    :total="total"
+    @size-change="handleSizeChange"
+    @current-change="handleCurrentChange"
+    class="custom-pagination"
   >
     <template #default>
       <el-icon v-if="loading" class="is-loading">
@@ -102,7 +101,11 @@ watchEffect(() => {
 }
 
 @keyframes rotating {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>

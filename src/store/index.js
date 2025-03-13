@@ -1,4 +1,4 @@
-import {createPinia} from 'pinia'
+import { createPinia } from 'pinia'
 import piniaPlugin from 'pinia-plugin-persistedstate'
 
 const pinia = createPinia()

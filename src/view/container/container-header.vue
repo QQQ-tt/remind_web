@@ -3,9 +3,8 @@
 </script>
 
 <template>
-  user
+  Header
 </template>
-
 
 <style scoped>
 

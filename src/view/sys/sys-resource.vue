@@ -3,9 +3,8 @@
 </script>
 
 <template>
-  user
+ resource
 </template>
-
 
 <style scoped>
 

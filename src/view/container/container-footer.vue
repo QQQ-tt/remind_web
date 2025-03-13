@@ -3,9 +3,8 @@
 </script>
 
 <template>
-  user
+  Footer
 </template>
-
 
 <style scoped>
 
