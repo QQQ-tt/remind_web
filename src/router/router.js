@@ -13,28 +13,59 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: () => import('@/view/mange-login.vue'),
+      component: () => import('@/view/manage-login.vue'),
+    },
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: () => import('@/view/container/container-layout.vue'),
+      redirect: {name: 'dashboardLog'},
+      children: [
+        {
+          path: 'log',
+          name: 'dashboardLog',
+          component: () => import('@/view/dashboard/dashboard-log.vue'),
+        },
+      ],
     },
     {
       path: '/sys',
-      name: 'sys',
+      name: 'sysManagement',
       component: () => import('@/view/container/container-layout.vue'),
-      redirect: '/sys/user',
+      redirect: {name: 'sysManagementUser'},
       children: [
         {
-          path: '/sys/user',
-          name: 'user',
+          path: 'user',
+          name: 'sysManagementUser',
           component: () => import('@/view/sys/sys-user.vue'),
         },
         {
-          path: '/sys/role',
-          name: 'role',
+          path: 'role',
+          name: 'sysManagementRole',
           component: () => import('@/view/sys/sys-role.vue'),
         },
         {
-          path: '/sys/resource',
-          name: 'menu',
+          path: 'resource',
+          name: 'sysManagementResource',
           component: () => import('@/view/sys/sys-resource.vue'),
+        },
+      ],
+    },
+    {
+      path: '/frequency',
+      name: 'rule',
+      component: () => import('@/view/container/container-layout.vue'),
+      redirect: {name: 'frequencyManagementRule'},
+      children: [
+        {
+          path: 'rule',
+          name: 'frequencyManagementRule',
+          component: () => import('@/view/frequency/frequency-rule.vue'),
+        },
+        {
+          path: 'task',
+          name: 'frequencyManagementTask',
+          component: () => import('@/view/frequency/frequency-task.vue'),
         },
       ],
     },
@@ -48,7 +79,7 @@ router.beforeEach(async (to, from, next) => {
       try {
         const res = await testToken()
         if (res.data.code === 200 && res.data.data) {
-          next({ name: 'sys' })
+          next({ name: 'sysManagement' })
         } else {
           userToken.removeToken()
           next()
@@ -56,8 +87,8 @@ router.beforeEach(async (to, from, next) => {
       } catch (error) {
         ElMsg.warningMsg('登录状态异常，请重新登录')
         userToken.removeToken()
-        next({ name: 'login' })
-        console.log(error)
+        next({ name: 'login', query: { redirect: to.fullPath } })
+        console.error(error)
       }
     } else {
       next()
@@ -65,7 +96,7 @@ router.beforeEach(async (to, from, next) => {
   } else if (userToken.info.token) {
     next()
   } else {
-    next({ name: 'login' })
+    next({ name: 'login', query: { redirect: to.fullPath } })
     ElMsg.warningMsg('请先登录')
   }
 })
