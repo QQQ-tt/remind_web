@@ -94,8 +94,7 @@ const menuSelect = (key) => {
 /* 统一菜单项样式 */
 .el-menu-item, :deep(.el-sub-menu__title) {
   border-radius: 12px;
-  margin-top: 5px;
-
+  margin-top: 10px;
   transition: all 0.3s ease;
 }
 

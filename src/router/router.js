@@ -79,7 +79,7 @@ router.beforeEach(async (to, from, next) => {
       try {
         const res = await testToken()
         if (res.data.code === 200 && res.data.data) {
-          next({ name: 'sysManagement' })
+          next({ name: 'dashboard' })
         } else {
           userToken.removeToken()
           next()

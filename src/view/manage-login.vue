@@ -25,7 +25,7 @@ const login = async () => {
       if (data.code === 200) {
         const user = data.data
         tokenStore.setToken(user.token, user.id, user.name, isRemember.value)
-        router.push({ name: 'sysManagement' })
+        router.push({ name: 'dashboard' })
         registerData.value = {}
       } else {
         loading.value = false
