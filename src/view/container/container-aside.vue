@@ -34,6 +34,22 @@ const menuSelect = (key) => {
         <span>仪表盘</span>
       </el-menu-item>
 
+      <!-- 频率管理 -->
+      <el-sub-menu index="frequencyManagement">
+        <template #title>
+          <el-icon><Timer /></el-icon>
+          <span>频率管理</span>
+        </template>
+        <el-menu-item index="frequencyManagementRule">
+          <el-icon><Memo /></el-icon>
+          规则配置
+        </el-menu-item>
+        <el-menu-item index="frequencyManagementTask">
+          <el-icon><Histogram /></el-icon>
+          任务监控
+        </el-menu-item>
+      </el-sub-menu>
+
       <!-- 系统管理 -->
       <el-sub-menu index="sysManagement">
         <template #title>
@@ -53,22 +69,6 @@ const menuSelect = (key) => {
           资源管理
         </el-menu-item>
       </el-sub-menu>
-
-      <!-- 频率管理 -->
-      <el-sub-menu index="frequencyManagement">
-        <template #title>
-          <el-icon><Timer /></el-icon>
-          <span>频率管理</span>
-        </template>
-        <el-menu-item index="frequencyManagementRule">
-          <el-icon><Memo /></el-icon>
-          规则配置
-        </el-menu-item>
-        <el-menu-item index="frequencyManagementTask">
-          <el-icon><Histogram /></el-icon>
-          任务监控
-        </el-menu-item>
-      </el-sub-menu>
     </el-menu>
   </div>
 </template>
@@ -84,24 +84,25 @@ const menuSelect = (key) => {
 /* 侧边栏整体样式 */
 .sidebar-menu {
   width: 190px;
-  height: 100vh;
   background: #fff;
   border-radius: 12px;
-  padding: 10px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  padding: 15px 10px; /* 增加顶部内边距 */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* 更强的阴影 */
+  transition: width 0.3s ease; /* 宽度变化动画 */
 }
 
 /* 统一菜单项样式 */
 .el-menu-item, :deep(.el-sub-menu__title) {
-  border-radius: 8px;
+  border-radius: 12px;
   margin-top: 5px;
-  transition: background 0.1s ease-in-out, border-radius 0.3s ease-in-out;
+
+  transition: all 0.3s ease;
 }
 
 /* 菜单项悬停效果 */
 .el-menu-item:hover, :deep(.el-sub-menu__title:hover) {
-  background: rgba(62, 163, 200, 0.34);
+  background: rgba(62, 163, 200, 0.2); /* 更淡的悬停色 */
+  transform: scale(1.05); /* 轻微缩放 */
 }
 
 /* 选中菜单项样式 */
@@ -109,7 +110,8 @@ const menuSelect = (key) => {
   background: linear-gradient(135deg, #409EFF, #66b1ff);
   color: #fff;
   font-weight: bold;
-  border-radius: 8px; /* 保持一致 */
+  padding: 12px 20px; /* 略微增加内边距 */
+  transform: translateX(3px); /* 轻微位移反馈 */
 }
 
 /* 选中菜单项的图标颜色 */
@@ -129,6 +131,7 @@ const menuSelect = (key) => {
   height: 100vh;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
   background: white;
+  transition: all 0.3s ease;
 }
 
 /* 内部菜单样式 */
