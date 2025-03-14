@@ -18,18 +18,22 @@ const isRemember = ref(false) // 新增：控制"记住我"状态
 // 登录
 const login = async () => {
   loading.value = true
-  await loginUser(registerData.value).then((result) => {
-    const data = result.data
-    const tokenStore = useTokenStore()
-    if (data.code === 200) {
-      const user = data.data
-      tokenStore.setToken(user.token, user.id, user.name, isRemember.value)
-      router.push({ name: 'sys' })
-      registerData.value = {}
-    } else {
+  await loginUser(registerData.value)
+    .then((result) => {
+      const data = result.data
+      const tokenStore = useTokenStore()
+      if (data.code === 200) {
+        const user = data.data
+        tokenStore.setToken(user.token, user.id, user.name, isRemember.value)
+        router.push({ name: 'sys' })
+        registerData.value = {}
+      } else {
+        loading.value = false
+      }
+    })
+    .catch(() => {
       loading.value = false
-    }
-  })
+    })
   loading.value = false
 }
 </script>
