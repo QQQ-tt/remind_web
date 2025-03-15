@@ -3,6 +3,7 @@ import { useRoute } from 'vue-router'
 import { computed } from 'vue'
 import { ArrowDown } from '@element-plus/icons-vue'
 import { useTokenStore } from '@/store/index'
+import router from '@/router/router'
 
 const userInfo = useTokenStore()
 // 模拟用户信息
@@ -28,6 +29,11 @@ const breadcrumbs = computed(() => {
     return acc
   }, [])
 })
+
+const logout = () => {
+  userInfo.removeToken()
+  router.push({ name: 'login' })
+}
 </script>
 
 <template>
@@ -65,7 +71,7 @@ const breadcrumbs = computed(() => {
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item>个人设置</el-dropdown-item>
-            <el-dropdown-item>退出登录</el-dropdown-item>
+            <el-dropdown-item @click="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
