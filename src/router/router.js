@@ -85,7 +85,6 @@ router.beforeEach(async (to, from, next) => {
           next()
         }
       } catch (error) {
-        ElMsg.warningMsg('登录状态异常，请重新登录')
         userToken.removeToken()
         next({ name: 'login', query: { redirect: to.fullPath } })
         console.error(error)

@@ -2,13 +2,14 @@
 import { useRoute } from 'vue-router'
 import { computed } from 'vue'
 import { ArrowDown } from '@element-plus/icons-vue'
+import { useTokenStore } from '@/store/index'
 
-
+const userInfo = useTokenStore()
 // 模拟用户信息
 const user = {
-  name: '张三',
+  name: userInfo.info.name || '张三',
   avatar: 'https://example.com/avatar.jpg',
-};
+}
 
 const route = useRoute()
 // 动态生成面包屑数组
@@ -135,7 +136,6 @@ const breadcrumbs = computed(() => {
 
 :deep(.el-dropdown-menu__item:hover) {
   background: #ecf5ff;
-  color: #409EFF;
+  color: #409eff;
 }
-
 </style>
