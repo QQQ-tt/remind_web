@@ -7,7 +7,7 @@ import { useTokenStore } from '@/store/index'
 const userInfo = useTokenStore()
 // 模拟用户信息
 const user = {
-  name: userInfo.info.name || '张三',
+  name: userInfo.name || '张三',
   avatar: 'https://example.com/avatar.jpg',
 }
 

@@ -16,8 +16,8 @@ instance.interceptors.request.use(
   function (config) {
     // 在发送请求之前做些什么
     const userToken = useTokenStore()
-    if (userToken.info) {
-      config.headers.Authorization = `Bearer ${userToken.info.token}`
+    if (userToken.token) {
+      config.headers.Authorization = `Bearer ${userToken.token}`
     }
     return config
   },

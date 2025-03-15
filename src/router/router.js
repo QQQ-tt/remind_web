@@ -74,8 +74,9 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   const userToken = useTokenStore()
+  userToken.restoreToken()
   if (to.name === 'login' || to.path === '/') {
-    if (userToken.info.token) {
+    if (userToken.token) {
       try {
         const res = await testToken()
         if (res.data.code === 200 && res.data.data) {
@@ -92,7 +93,7 @@ router.beforeEach(async (to, from, next) => {
     } else {
       next()
     }
-  } else if (userToken.info.token) {
+  } else if (userToken.token) {
     next()
   } else {
     next({ name: 'login', query: { redirect: to.fullPath } })
