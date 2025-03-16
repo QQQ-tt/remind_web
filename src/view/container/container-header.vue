@@ -98,7 +98,6 @@ const logout = () => {
 /* 用户信息区域 */
 .user-info {
   text-align: right;
-  padding-right: 20px;
 }
 
 .user-dropdown {

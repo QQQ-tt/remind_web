@@ -9,18 +9,7 @@ const router = useRouter()
 const tabsStore = useTabsStore()
 
 // 初始化 Tab
-const initTabs = () => {
-  const dashboardLogRoute = router.getRoutes().find(route => route.name === 'dashboardLog')
-  if (dashboardLogRoute) {
-    tabsStore.addTab({
-      name: dashboardLogRoute.name,
-      path: dashboardLogRoute.path,
-      title: dashboardLogRoute.meta.title || '未命名',
-      icon: dashboardLogRoute.meta.icon || 'Document'
-    })
-  }
-}
-initTabs()
+tabsStore.initTab(route)
 
 // 监听路由变化，添加 Tab
 watch(() => route.fullPath, (newPath) => {
@@ -38,6 +27,7 @@ const handleRemove = (targetPath) => {
     return
   }
   tabsStore.removeTab(targetPath)
+  router.push(tabsStore.activeTab)
 }
 
 // 处理 Tab 点击事件
