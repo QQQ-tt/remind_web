@@ -1,12 +1,12 @@
-<script lang="ts" setup>
-import { Document, Setting, Timer, Memo, Histogram, Lock, User, Monitor } from '@element-plus/icons-vue'
+<script setup>
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import { computed } from 'vue'
-import { useRoute } from 'vue-router'
-import router from "@/router/router"
+import { useRoute, useRouter } from 'vue-router'
+import router from '@/router/router'
 
 // 获取当前路由对象
 const route = useRoute()
-
+const routes = useRouter().getRoutes()
 // 计算当前激活菜单项
 const activeMenu = computed(() => route.name)
 
@@ -14,6 +14,17 @@ const activeMenu = computed(() => route.name)
 const menuSelect = (key) => {
   router.push({ name: key })
 }
+// 过滤出需要显示的路由
+const sidebarRoutes = computed(() => {
+  const parentRoutes = routes.filter((route) => route.children.length && route.meta.title)
+  let allMateTitle = routes.filter((route) => route.meta && route.meta.title)
+  parentRoutes.forEach((p) => {
+    p.children.forEach((child) => {
+      allMateTitle = allMateTitle.filter((a) => child.name !== a.name)
+    })
+  })
+  return allMateTitle
+})
 </script>
 
 <template>
@@ -28,53 +39,37 @@ const menuSelect = (key) => {
       @select="menuSelect"
     >
       <h5 class="mb-2">Remind</h5>
-      <!-- 仪表盘 -->
-      <el-menu-item index="dashboardLog">
-        <el-icon><Monitor /></el-icon>
-        <span>仪表盘</span>
-      </el-menu-item>
-
-      <!-- 频率管理 -->
-      <el-sub-menu index="frequencyManagement">
-        <template #title>
-          <el-icon><Timer /></el-icon>
-          <span>频率管理</span>
-        </template>
-        <el-menu-item index="frequencyManagementRule">
-          <el-icon><Memo /></el-icon>
-          规则配置
+      <!-- 动态渲染菜单项 -->
+      <template v-for="route in sidebarRoutes" :key="route.name">
+        <el-sub-menu v-if="route.children.length" :index="route.name">
+          <template #title>
+            <el-icon v-if="ElementPlusIconsVue[route.meta.icon]">
+              <component :is="ElementPlusIconsVue[route.meta.icon]" />
+            </el-icon>
+            <span>{{ route.meta.title }}</span>
+          </template>
+          <el-menu-item v-for="child in route.children" :key="child.name" :index="child.name">
+            <el-icon v-if="ElementPlusIconsVue[child.meta.icon]">
+              <component :is="ElementPlusIconsVue[child.meta.icon]" />
+            </el-icon>
+            <span>{{ child.meta.title }}</span>
+          </el-menu-item>
+        </el-sub-menu>
+        <el-menu-item v-else :index="route.name">
+          <el-icon v-if="ElementPlusIconsVue[route.meta.icon]">
+            <component :is="ElementPlusIconsVue[route.meta.icon]" />
+          </el-icon>
+          <span>{{ route.meta.title }}</span>
         </el-menu-item>
-        <el-menu-item index="frequencyManagementTask">
-          <el-icon><Histogram /></el-icon>
-          任务监控
-        </el-menu-item>
-      </el-sub-menu>
-
-      <!-- 系统管理 -->
-      <el-sub-menu index="sysManagement">
-        <template #title>
-          <el-icon><Setting /></el-icon>
-          <span>系统管理</span>
-        </template>
-        <el-menu-item index="sysManagementUser">
-          <el-icon><User /></el-icon>
-          用户管理
-        </el-menu-item>
-        <el-menu-item index="sysManagementRole">
-          <el-icon><Lock /></el-icon>
-          角色管理
-        </el-menu-item>
-        <el-menu-item index="sysManagementResource">
-          <el-icon><Document /></el-icon>
-          资源管理
-        </el-menu-item>
-      </el-sub-menu>
+      </template>
     </el-menu>
   </div>
 </template>
 
 <style scoped>
-.mb-2,.el-menu-item, :deep(.el-sub-menu__title) {
+.mb-2,
+.el-menu-item,
+:deep(.el-sub-menu__title) {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -92,21 +87,23 @@ const menuSelect = (key) => {
 }
 
 /* 统一菜单项样式 */
-.el-menu-item, :deep(.el-sub-menu__title) {
+.el-menu-item,
+:deep(.el-sub-menu__title) {
   border-radius: 12px;
   margin-top: 10px;
   transition: all 0.3s ease;
 }
 
 /* 菜单项悬停效果 */
-.el-menu-item:hover, :deep(.el-sub-menu__title:hover) {
+.el-menu-item:hover,
+:deep(.el-sub-menu__title:hover) {
   background: rgba(62, 163, 200, 0.2); /* 更淡的悬停色 */
   transform: scale(1.05); /* 轻微缩放 */
 }
 
 /* 选中菜单项样式 */
 .el-menu-item.is-active {
-  background: linear-gradient(135deg, #409EFF, #66b1ff);
+  background: linear-gradient(135deg, #409eff, #66b1ff);
   color: #fff;
   font-weight: bold;
   padding: 12px 20px; /* 略微增加内边距 */
