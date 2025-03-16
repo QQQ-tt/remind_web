@@ -16,15 +16,14 @@ const route = useRoute()
 // 动态生成面包屑数组
 const breadcrumbs = computed(() => {
   // 当前路径（如：/user/profile/edit）
-  const pathArray = route.path.split('/').filter((part) => part) // 过滤空字符串
+  const pathArray = route.path.split('/').filter((part) => part)
   // 生成面包屑项
   return pathArray.reduce((acc, part) => {
     // 累计路径（如：/user, /user/profile）
     const currentPath = `/${acc.length ? acc[acc.length - 1].path.split('/').slice(1).join('/') + '/' + part : part}`
-    // 添加到数组
     acc.push({
       path: currentPath,
-      name: name || part.charAt(0).toUpperCase() + part.slice(1).replace(/-/g, ' '),
+      name: part.charAt(0).toUpperCase() + part.slice(1).replace(/-/g, ' '),
     })
     return acc
   }, [])

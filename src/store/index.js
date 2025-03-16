@@ -7,3 +7,4 @@ pinia.use(piniaPlugin)
 export default pinia
 
 export * from './module/token'
+export * from './module/tabs'
