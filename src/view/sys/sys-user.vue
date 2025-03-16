@@ -160,7 +160,7 @@ const handleDelete = (index, row) => {
 
 .table-pagination-container {
   position: relative; /* 开启相对定位 */
-  min-height: 650px; /* 给容器设置最小高度，避免内容不足时定位异常 */
+  min-height: 80%; /* 给容器设置最小高度，避免内容不足时定位异常 */
 }
 
 /* 让表单项在一行内自适应 */
