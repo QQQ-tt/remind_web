@@ -1,4 +1,4 @@
-import Request from '@/util/request.js'
+import Request from '@/util/request'
 
 export function loginUser(e) {
   return Request.post('remind/sysUser/loginUser', {
