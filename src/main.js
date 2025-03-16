@@ -9,4 +9,11 @@ app.use(pinia)
 
 app.use(router)
 
+// 全局键盘事件监听器 Ctrl + S 被阻止
+document.addEventListener('keydown', (event) => {
+  if (event.ctrlKey && event.key === 's') {
+    event.preventDefault()
+  }
+})
+
 app.mount('#app')

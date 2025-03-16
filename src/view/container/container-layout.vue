@@ -16,7 +16,7 @@ import ContainerFooter from '@/view/container/container-footer.vue'
         <el-header>
           <container-header/>
         </el-header>
-        <el-main>
+        <el-main style="padding:5px">
           <container-main/>
         </el-main>
         <el-footer>
