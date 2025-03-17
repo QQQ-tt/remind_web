@@ -119,7 +119,7 @@ router.beforeEach(async (to, from, next) => {
         }
       } catch (error) {
         userToken.removeToken()
-        next({ name: 'login', query: { redirect: to.fullPath } })
+        next()
         console.error(error)
       }
     } else {

@@ -19,18 +19,16 @@ const queryConditions = reactive({
 const handleSearch = async (pageNo, pageSize) => {
   queryConditions.pageNo = pageNo || 1
   queryConditions.pageSize = pageSize || 10
-  console.log('搜索条件:', queryConditions)
   await pageSysUser(queryConditions).then((data) => {
-    console.log('搜索结果:', data.data.data.records)
     tableData.value = data.data.data.records
     tableData.total = data.data.data.total
   })
-  console.log('tableData:', tableData.value)
 }
-
 // 初始化数据
-handleSearch(1, 10)
-
+const initData = async () => {
+  await handleSearch(1, 10)
+}
+initData()
 // 重置功能
 const handleReset = () => {
   queryConditions.name = ''

@@ -15,7 +15,6 @@ const props = defineProps({
 const small = ref(false)
 const background = ref(true) // 默认开启背景色
 const disabled = ref(false)
-const loading = ref(false) // 新增加载状态
 const pageNum = ref(1)
 const pageSize = ref(10)
 
@@ -25,8 +24,7 @@ const setPageSize = (val) => {
 }
 
 const triggerListPage = () => {
-  loading.value = true
-  props.listPage(pageNum.value, pageSize.value).finally(() => (loading.value = false))
+  props.listPage(pageNum.value, pageSize.value)
 }
 
 const handleSizeChange = (val) => {
@@ -56,20 +54,14 @@ watchEffect(() => {
     v-model:page-size="pageSize"
     :page-sizes="[10, 20, 50, 100]"
     :small="small"
-    :disabled="disabled || loading"
+    :disabled="disabled"
     :background="background"
     layout="total, sizes, prev, pager, next, jumper"
     :total="total"
     @size-change="handleSizeChange"
     @current-change="handleCurrentChange"
     class="custom-pagination"
-  >
-    <template #default>
-      <el-icon v-if="loading" class="is-loading">
-        <Loading />
-      </el-icon>
-    </template>
-  </el-pagination>
+  />
 </template>
 
 <style scoped lang="scss">
