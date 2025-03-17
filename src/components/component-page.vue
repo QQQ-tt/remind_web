@@ -13,7 +13,7 @@ const props = defineProps({
 })
 
 const small = ref(false)
-const background = ref(true) // 默认开启背景色
+const background = ref(true)
 const disabled = ref(false)
 const pageNum = ref(1)
 const pageSize = ref(10)

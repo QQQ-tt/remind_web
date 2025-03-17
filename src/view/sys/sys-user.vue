@@ -2,13 +2,14 @@
 import { reactive } from 'vue'
 import { pageSysUser } from '@/api/sys-api'
 import ComponentPage from '@/components/component-page.vue'
+import ComponentQueryFrom from '@/components/component-query-from.vue'
 
 // 定义查询条件的响应式对象
 const queryConditions = reactive({
   name: '',
   account: '',
   telephone: '',
-  status: '',
+  status: null,
   userType: 'sys',
   pageNo: 1,
   pageSize: 10,
@@ -34,7 +35,7 @@ const handleReset = () => {
   queryConditions.name = ''
   queryConditions.account = ''
   queryConditions.telephone = ''
-  queryConditions.status = ''
+  queryConditions.status = null
   queryConditions.userType = 'sys'
 }
 
@@ -50,6 +51,39 @@ const getType = (s) => {
     return 'danger'
   }
 }
+
+// 表单元数据
+const formItems = [
+  {
+    type: 'input',
+    model: 'name',
+    label: '用户名称',
+    placeholder: '请输入用户名称',
+    clearable: true,
+  },
+  { type: 'input', model: 'account', label: '账户', placeholder: '请输入账户', clearable: true },
+  { type: 'input', model: 'telephone', label: '电话', placeholder: '请输入电话', clearable: true },
+  {
+    type: 'select',
+    model: 'status',
+    label: '状态',
+    clearable: true,
+    options: [
+      { label: '启用', value: true },
+      { label: '禁用', value: false },
+    ],
+  },
+  {
+    type: 'select',
+    model: 'userType',
+    label: '用户类型',
+    clearable: false,
+    options: [
+      { label: '系统用户', value: 'sys' },
+      { label: '普通用户', value: 'user' },
+    ],
+  },
+]
 
 // 查看、编辑、删除功能的占位函数
 const handleView = (index, row) => {
@@ -67,61 +101,18 @@ const handleDelete = (index, row) => {
 
 <template>
   <div class="sidebar-wrapper">
-    <el-form :model="queryConditions" class="form-horizontal">
-      <el-form-item label="用户名称" class="auto-width">
-        <el-input
-          v-model="queryConditions.name"
-          placeholder="请输入用户名称"
-          class="custom-input"
-          clearable
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="账户" class="auto-width">
-        <el-input
-          v-model="queryConditions.account"
-          placeholder="请输入账户"
-          class="custom-input"
-          clearable
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="电话" class="auto-width">
-        <el-input
-          v-model="queryConditions.telephone"
-          placeholder="请输入电话"
-          class="custom-input"
-          clearable
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="状态" class="auto-width">
-        <el-select
-          v-model="queryConditions.status"
-          placeholder="请选择状态"
-          class="custom-input"
-          clearable
-        >
-          <el-option label="启用" :value="true"></el-option>
-          <el-option label="禁用" :value="false"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="用户类型" class="auto-width">
-        <el-select
-          v-model="queryConditions.userType"
-          placeholder="请选择用户类型"
-          class="custom-input"
-        >
-          <el-option label="系统用户" value="sys"></el-option>
-          <el-option label="普通用户" value="user"></el-option>
-        </el-select>
-      </el-form-item>
-    </el-form>
-    <div class="button-container">
-      <el-button
-        type="primary"
-        @click="handleSearch(queryConditions.pageNo, queryConditions.pageSize)"
-        >搜索
-      </el-button>
-      <el-button @click="handleReset">重置</el-button>
-    </div>
+    <component-query-from v-model="queryConditions" :form-items="formItems">
+      <template #actions>
+        <div class="button-container">
+          <el-button
+            type="primary"
+            @click="handleSearch(queryConditions.pageNo, queryConditions.pageSize)"
+            >搜索
+          </el-button>
+          <el-button @click="handleReset">重置</el-button>
+        </div>
+      </template>
+    </component-query-from>
   </div>
   <div class="sidebar-wrapper table-pagination-container">
     <el-table :data="tableData.value" style="width: 100%" border stripe>
