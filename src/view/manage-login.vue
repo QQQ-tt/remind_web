@@ -50,7 +50,7 @@ const login = async () => {
         <el-form-item prop="userId">
           <el-input
             :prefix-icon="User"
-            placeholder="请输入工号"
+            placeholder="请输入账户或手机号"
             v-model="registerData.account"
           ></el-input>
         </el-form-item>

@@ -45,6 +45,14 @@ const tableData = reactive({
   total: 0,
 })
 
+const getType = (s) => {
+  if (s === true) {
+    return 'success'
+  } else {
+    return 'danger'
+  }
+}
+
 // 查看、编辑、删除功能的占位函数
 const handleView = (index, row) => {
   console.log('查看:', index, row)
@@ -109,34 +117,39 @@ const handleDelete = (index, row) => {
       </el-form-item>
     </el-form>
     <div class="button-container">
-      <el-button type="primary"
-                 @click="handleSearch(queryConditions.pageNo, queryConditions.pageSize)">搜索</el-button>
+      <el-button
+        type="primary"
+        @click="handleSearch(queryConditions.pageNo, queryConditions.pageSize)"
+        >搜索
+      </el-button>
       <el-button @click="handleReset">重置</el-button>
     </div>
   </div>
   <div class="sidebar-wrapper table-pagination-container">
     <el-table :data="tableData.value" style="width: 100%" border stripe>
-      <el-table-column prop="name" label="用户名称" width="180" />
-      <el-table-column prop="account" label="账户" width="180" />
-      <el-table-column prop="telephone" label="电话" width="180" />
-      <el-table-column prop="status" label="状态" width="180">
+      <el-table-column prop="name" label="用户名称" width="100" />
+      <el-table-column prop="account" label="账户" width="120" />
+      <el-table-column prop="telephone" label="电话" width="120" />
+      <el-table-column prop="status" label="状态" width="80">
         <template #default="scope">
-          <span>{{ scope.row.status ? '启用' : '禁用' }}</span>
+          <el-tag :type="getType(scope.row.status)">
+            <span>{{ scope.row.status ? '启用' : '禁用' }}</span>
+          </el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="userType" label="用户类型" width="180">
+      <el-table-column prop="userType" label="用户类型" width="100">
         <template #default="scope">
           <span>{{ scope.row.userType === 'sys' ? '系统用户' : '普通用户' }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="createTime" label="创建时间" width="180" />
-      <el-table-column prop="updateTime" label="更新时间" width="auto" />
+      <el-table-column prop="updateTime" show-overflow-tooltip label="更新时间" width="auto" />
       <el-table-column label="操作" width="200">
         <template #default="scope">
           <el-button size="small" @click="handleView(scope.$index, scope.row)">查看</el-button>
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)"
-          >删除
+            >删除
           </el-button>
         </template>
       </el-table-column>
@@ -160,7 +173,7 @@ const handleDelete = (index, row) => {
 
 .table-pagination-container {
   position: relative; /* 开启相对定位 */
-  min-height: 80%; /* 给容器设置最小高度，避免内容不足时定位异常 */
+  min-height: 440px; /* 给容器设置最小高度，避免内容不足时定位异常 */
 }
 
 /* 让表单项在一行内自适应 */

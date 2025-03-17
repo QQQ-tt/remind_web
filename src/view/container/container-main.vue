@@ -9,17 +9,20 @@ const router = useRouter()
 const tabsStore = useTabsStore()
 
 // 初始化 Tab
-tabsStore.initTab(route)
+tabsStore.initTab(route, router)
 
 // 监听路由变化，添加 Tab
-watch(() => route.fullPath, (newPath) => {
-  tabsStore.addTab({
-    name: route.name,
-    path: newPath,
-    title: route.meta.title || '未命名',
-    icon: route.meta.icon || 'Document'
-  })
-})
+watch(
+  () => route.fullPath,
+  (newPath) => {
+    tabsStore.addTab({
+      name: route.name,
+      path: newPath,
+      title: route.meta.title || '未命名',
+      icon: route.meta.icon || 'Document',
+    })
+  }
+)
 
 // 处理 Tab 关闭事件
 const handleRemove = (targetPath) => {
@@ -38,11 +41,7 @@ const handleClick = (tab) => {
 
 <template>
   <!-- Tabs 组件 -->
-  <el-tabs
-    v-model="tabsStore.activeTab"
-    @tab-remove="handleRemove"
-    class="custom-tabs"
-  >
+  <el-tabs v-model="tabsStore.activeTab" @tab-remove="handleRemove" class="custom-tabs">
     <el-tab-pane
       v-for="(tab, index) in tabsStore.tabs"
       :key="tab.path"
@@ -69,6 +68,7 @@ const handleClick = (tab) => {
   -ms-user-select: none;
   user-select: none;
 }
+
 /* Tab Label 样式 */
 .tab-label {
   display: flex;
@@ -79,6 +79,7 @@ const handleClick = (tab) => {
   border-radius: 12px;
   transition: all 0.3s ease;
 }
+
 :deep(.el-tabs__item) {
   padding: 0;
 }
