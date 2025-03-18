@@ -29,7 +29,6 @@ initData()
 // 重置功能
 const handleReset = () => {
   queryConditions.name = ''
-  queryConditions.telephone = ''
   queryConditions.status = null
 }
 
@@ -56,8 +55,8 @@ const formItems = [
   {
     type: 'input',
     model: 'name',
-    label: '用户名称',
-    placeholder: '请输入用户名称',
+    label: '角色名称',
+    placeholder: '请输入角色名称',
     width: '120px',
     clearable: true,
   },
