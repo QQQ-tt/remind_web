@@ -54,7 +54,7 @@ const formItems = [
     type: 'input',
     model: 'name',
     label: '资源名称',
-    placeholder: '请输入用户名称',
+    placeholder: '请输入资源名称',
     width: '120px',
     clearable: true,
   },
