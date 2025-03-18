@@ -65,15 +65,31 @@ const formItems = [
     model: 'name',
     label: '用户名称',
     placeholder: '请输入用户名称',
+    width: '120px',
     clearable: true,
   },
-  { type: 'input', model: 'account', label: '账户', placeholder: '请输入账户', clearable: true },
-  { type: 'input', model: 'telephone', label: '电话', placeholder: '请输入电话', clearable: true },
+  {
+    type: 'input',
+    model: 'account',
+    label: '账户',
+    placeholder: '请输入账户',
+    width: '100px',
+    clearable: true,
+  },
+  {
+    type: 'input',
+    model: 'telephone',
+    label: '电话',
+    placeholder: '请输入电话',
+    width: '120px',
+    clearable: true,
+  },
   {
     type: 'select',
     model: 'status',
     label: '状态',
     clearable: true,
+    width: '100px',
     placeholder: '请选择状态',
     options: [
       { label: '启用', value: true },
@@ -85,6 +101,7 @@ const formItems = [
     model: 'userType',
     label: '用户类型',
     placeholder: '请选择用户类型',
+    width: '100px',
     clearable: false,
     options: [
       { label: '系统用户', value: 'sys' },
@@ -101,7 +118,7 @@ const columns = [
   { prop: 'status', label: '状态', width: '80' },
   { prop: 'userType', label: '用户类型', width: '100' },
   { prop: 'createTime', label: '创建时间', width: '180' },
-  { prop: 'updateTime', label: '更新时间', width: 'auto', showOverflowTooltip: true }
+  { prop: 'updateTime', label: '更新时间', width: 'auto', showOverflowTooltip: true },
 ]
 
 const actions = [
@@ -115,14 +132,13 @@ const actions = [
   <div class="sidebar-wrapper">
     <component-query-from v-model="queryConditions" :form-items="formItems">
       <template #actions>
-        <div class="button-container">
-          <el-button
-            type="primary"
-            @click="handleSearch(queryConditions.pageNo, queryConditions.pageSize)"
-            >搜索
-          </el-button>
-          <el-button @click="handleReset">重置</el-button>
-        </div>
+        <el-button
+          type="primary"
+          @click="handleSearch(queryConditions.pageNo, queryConditions.pageSize)"
+        >
+          搜索
+        </el-button>
+        <el-button @click="handleReset">重置</el-button>
       </template>
     </component-query-from>
   </div>
@@ -151,7 +167,7 @@ const actions = [
   margin-top: 10px;
   background: white;
   border-radius: 12px;
-  padding: 5px 10px 0;
+  padding: 5px 10px 5px;
   display: flex;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* 更强的阴影 */
 }
@@ -169,21 +185,19 @@ const actions = [
 }
 
 /* 让输入框和 label 居中 */
-.el-form-item {
+:deep(.el-form-item) {
   display: flex;
   align-items: center; /* 保持 label 和 input 垂直居中 */
-  margin-bottom: 6px;
+  margin-bottom: 0;
 }
 
 /* 让输入框宽度适中 */
 .custom-input {
-  min-width: 120px;
   flex: 1;
 }
 
 /* 按钮容器样式 */
 .button-container {
-  display: flex;
   margin-left: auto;
 }
 

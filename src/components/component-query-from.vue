@@ -23,14 +23,15 @@ const model = defineModel()
         :placeholder="item.placeholder"
         class="custom-input"
         :clearable="item.clearable"
+        :style="{ width: item.width || '100%' }"
       />
-
       <el-select
         v-if="item.type === 'select'"
         v-model="model[item.model]"
         :placeholder="item.placeholder"
         class="custom-input"
         :clearable="item.clearable"
+        :style="{ width: item.width || '100%' }"
       >
         <el-option
           v-for="(opt, idx) in item.options"
@@ -40,7 +41,9 @@ const model = defineModel()
         />
       </el-select>
     </el-form-item>
-    <slot name="actions"></slot>
+    <el-form-item style="margin-left: auto;">
+      <slot name="actions"></slot>
+    </el-form-item>
   </el-form>
 </template>
 
