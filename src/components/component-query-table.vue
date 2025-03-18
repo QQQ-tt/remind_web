@@ -16,7 +16,7 @@ defineProps({
 </script>
 
 <template>
-  <el-table :data="tableData" style="width: 100%" border stripe>
+  <el-table :data="tableData" style="width: 100%" height="462" row-key="id" border stripe>
     <el-table-column
       v-for="(col, index) in columns"
       :key="index"
