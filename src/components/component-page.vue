@@ -28,21 +28,19 @@ const triggerListPage = () => {
 }
 
 const handleSizeChange = (val) => {
-  console.log('items per page:', val)
   setPageSize(val)
   pageNum.value = 1 // 切换每页条数重置页码
   triggerListPage()
 }
 
 const handleCurrentChange = (val) => {
-  console.log('current page:', val)
   pageNum.value = val
   triggerListPage()
 }
 
 // 自动监听分页参数变化
 watchEffect(() => {
-  if (pageNum.value * pageSize.value > props.total) {
+  if (pageNum.value * pageSize.value - props.total > pageSize.value) {
     pageNum.value = Math.max(1, Math.floor(props.total / pageSize.value))
   }
 })
