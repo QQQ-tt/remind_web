@@ -9,3 +9,7 @@ export function pageSysUser(e) {
     { noSuccessMsg: true }
   )
 }
+
+export function pageSysRole(e) {
+  return Request.post('remind/sysRole/pageSysRole', { ...e }, { noSuccessMsg: true })
+}

@@ -173,8 +173,9 @@ const actions = [
 }
 
 .table-pagination-container {
-  position: relative; /* 开启相对定位 */
-  min-height: 440px; /* 给容器设置最小高度，避免内容不足时定位异常 */
+  position: relative;
+  min-height: 440px;
+  padding-bottom: 48px; /* 增加底部内边距预留分页空间 */
 }
 
 /* 让表单项在一行内自适应 */
@@ -191,20 +192,10 @@ const actions = [
   margin-bottom: 0;
 }
 
-/* 让输入框宽度适中 */
-.custom-input {
-  flex: 1;
-}
-
-/* 按钮容器样式 */
-.button-container {
-  margin-left: auto;
-}
-
 .pagination-wrap {
   position: absolute;
-  right: 10px; /* 距离右侧间距 */
-  bottom: 10px; /* 距离底部间距 */
+  right: 10px;
+  bottom: 10px;
 }
 
 /* 响应式处理，防止小屏幕变形 */
