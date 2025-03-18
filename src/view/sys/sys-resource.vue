@@ -68,9 +68,21 @@ const columns = [
   { prop: 'method', label: '方法类型', width: '100', showOverflowTooltip: true },
   { prop: 'type', label: '资源类型', width: '100', showOverflowTooltip: true },
   { prop: 'status', label: '资源状态', width: '100', showOverflowTooltip: true },
-  { prop: 'description', label: '详细描述', width: '100', showOverflowTooltip: true },
-  { prop: 'createTime', label: '创建时间', width: '180' },
-  { prop: 'updateTime', label: '更新时间', width: 'auto', showOverflowTooltip: true },
+  { prop: 'description', label: '详细描述', width: 'auto', showOverflowTooltip: true },
+  {
+    prop: 'createTime',
+    label: '创建时间',
+    width: '180',
+    showOverflowTooltip: true,
+    sortable: true,
+  },
+  {
+    prop: 'updateTime',
+    label: '更新时间',
+    width: '180',
+    showOverflowTooltip: true,
+    sortable: true,
+  },
 ]
 
 const actions = [
@@ -85,6 +97,26 @@ const typeSwitch = (e) => {
       return '路由'
     case 'api':
       return '接口'
+    default:
+      return false
+  }
+}
+const getTagType = (e) => {
+  switch (e) {
+    case 'route':
+      return 'info'
+    case 'api':
+      return 'primary'
+    default:
+      return false
+  }
+}
+const getTagEffect = (e) => {
+  switch (e) {
+    case 'route':
+      return 'light'
+    case 'api':
+      return 'plain'
     default:
       return false
   }
@@ -108,7 +140,9 @@ const typeSwitch = (e) => {
   <div class="sidebar-wrapper table-pagination-container">
     <component-query-table :tableData="tableData.value" :columns="columns" :actions="actions">
       <template #type="{ row }">
-        <span>{{ typeSwitch(row.type) }}</span>
+        <el-tag :type="getTagType(row.type)" :effect="getTagEffect(row.type)">
+          {{ typeSwitch(row.type) }}
+        </el-tag>
       </template>
       <!-- 自定义状态列 -->
       <template #status="{ row }">

@@ -64,14 +64,26 @@ const formItems = [
 const columns = [
   { prop: 'name', label: '频次名称', width: '120', showOverflowTooltip: true },
   { prop: 'frequencyCode', label: '频次编码', width: '100', showOverflowTooltip: true },
-  { prop: 'frequencyDesc', label: '频次描述', width: '100', showOverflowTooltip: true },
-  { prop: 'frequencyNumber', label: '执行次数', width: '100', showOverflowTooltip: true },
-  { prop: 'frequencyCycle', label: '频次周期', width: '100', showOverflowTooltip: true },
-  { prop: 'cycleUnit', label: '周期单位', width: '100', showOverflowTooltip: true },
+  { prop: 'frequencyNumber', label: '执行次数', width: '100'  },
+  { prop: 'frequencyCycle', label: '频次周期', width: '100' },
+  { prop: 'cycleUnit', label: '周期单位', width: '100' },
   { prop: 'type', label: '开始方式', width: '100', showOverflowTooltip: true },
   { prop: 'status', label: '频次状态', width: '100', showOverflowTooltip: true },
-  { prop: 'createTime', label: '创建时间', width: '180' },
-  { prop: 'updateTime', label: '更新时间', width: 'auto', showOverflowTooltip: true },
+  { prop: 'frequencyDesc', label: '频次描述', width: 'auto', showOverflowTooltip: true },
+  {
+    prop: 'createTime',
+    label: '创建时间',
+    width: '180',
+    showOverflowTooltip: true,
+    sortable: true,
+  },
+  {
+    prop: 'updateTime',
+    label: '更新时间',
+    width: '180',
+    showOverflowTooltip: true,
+    sortable: true,
+  },
 ]
 
 const actions = [
@@ -82,16 +94,16 @@ const actions = [
 
 const cycleUnitSwitch = (e) => {
   switch (e) {
-    case 'hour':
+    case 'HOUR':
       return '小时'
-    case 'day':
+    case 'DAY':
       return '天'
-    case 'week':
+    case 'WEEK':
       return '周'
-    case 'month':
+    case 'MONTH':
       return '月'
     default:
-      return false
+      return ''
   }
 }
 

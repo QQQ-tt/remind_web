@@ -78,9 +78,21 @@ const formItems = [
 const columns = [
   { prop: 'name', label: '角色名称', width: '180', showOverflowTooltip: true },
   { prop: 'status', label: '状态', width: '80' },
-  { prop: 'remark', label: '备注', width: '180', showOverflowTooltip: true },
-  { prop: 'createTime', label: '创建时间', width: '180' },
-  { prop: 'updateTime', label: '更新时间', width: 'auto', showOverflowTooltip: true },
+  { prop: 'remark', label: '备注', width: 'auto', showOverflowTooltip: true },
+  {
+    prop: 'createTime',
+    label: '创建时间',
+    width: '180',
+    showOverflowTooltip: true,
+    sortable: true,
+  },
+  {
+    prop: 'updateTime',
+    label: '更新时间',
+    width: '180',
+    showOverflowTooltip: true,
+    sortable: true,
+  },
 ]
 
 const actions = [

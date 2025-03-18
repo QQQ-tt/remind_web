@@ -117,9 +117,21 @@ const columns = [
   { prop: 'telephone', label: '电话', width: '120' },
   { prop: 'status', label: '状态', width: '80' },
   { prop: 'sysRoleName', label: '角色名称', width: '100' },
-  { prop: 'userType', label: '用户类型', width: '100' },
-  { prop: 'createTime', label: '创建时间', width: '180' },
-  { prop: 'updateTime', label: '更新时间', width: 'auto', showOverflowTooltip: true },
+  { prop: 'userType', label: '用户类型', width: 'auto' },
+  {
+    prop: 'createTime',
+    label: '创建时间',
+    width: '180',
+    showOverflowTooltip: true,
+    sortable: true,
+  },
+  {
+    prop: 'updateTime',
+    label: '更新时间',
+    width: '180',
+    showOverflowTooltip: true,
+    sortable: true,
+  },
 ]
 
 const actions = [

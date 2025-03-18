@@ -63,13 +63,25 @@ const formItems = [
 // 表格列元数据
 const columns = [
   { prop: 'name', label: '任务名称', width: '120', showOverflowTooltip: true },
-  { prop: 'startTime', label: '开始时间', width: '100', showOverflowTooltip: true },
-  { prop: 'endTime', label: '结束时间', width: '100', showOverflowTooltip: true },
-  { prop: 'pushNum', label: '推送次数', width: '100', showOverflowTooltip: true },
-  { prop: 'num', label: '提醒次数', width: '100', showOverflowTooltip: true },
-  { prop: 'remark', label: '备注', width: '100', showOverflowTooltip: true },
-  { prop: 'createTime', label: '创建时间', width: '180' },
-  { prop: 'updateTime', label: '更新时间', width: 'auto', showOverflowTooltip: true },
+  { prop: 'startTime', label: '开始时间', width: '180', showOverflowTooltip: true },
+  { prop: 'endTime', label: '结束时间', width: '180', showOverflowTooltip: true },
+  { prop: 'pushNum', label: '推送次数', width: '100' },
+  { prop: 'num', label: '提醒次数', width: '100' },
+  { prop: 'remark', label: '备注', width: 'auto', showOverflowTooltip: true },
+  {
+    prop: 'createTime',
+    label: '创建时间',
+    width: '180',
+    showOverflowTooltip: true,
+    sortable: true,
+  },
+  {
+    prop: 'updateTime',
+    label: '更新时间',
+    width: '180',
+    showOverflowTooltip: true,
+    sortable: true,
+  },
 ]
 
 const actions = [

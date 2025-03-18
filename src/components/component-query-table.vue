@@ -24,6 +24,7 @@ defineProps({
       :label="col.label"
       :width="col.width"
       :show-overflow-tooltip="col.showOverflowTooltip"
+      :sortable="col.sortable"
     >
       <!-- 判断是否有插槽 -->
       <template v-if="$slots[col.prop]" #default="scope">
