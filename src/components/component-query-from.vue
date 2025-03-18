@@ -28,7 +28,7 @@ const model = defineModel()
       <el-select
         v-if="item.type === 'select'"
         v-model="model[item.model]"
-        placeholder="请选择"
+        :placeholder="item.placeholder"
         class="custom-input"
         :clearable="item.clearable"
       >

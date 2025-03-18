@@ -3,6 +3,7 @@ import { reactive } from 'vue'
 import { pageSysUser } from '@/api/sys-api'
 import ComponentPage from '@/components/component-page.vue'
 import ComponentQueryFrom from '@/components/component-query-from.vue'
+import ComponentQueryTable from '@/components/component-query-table.vue'
 
 // 定义查询条件的响应式对象
 const queryConditions = reactive({
@@ -44,12 +45,17 @@ const tableData = reactive({
   total: 0,
 })
 
-const getType = (s) => {
-  if (s === true) {
-    return 'success'
-  } else {
-    return 'danger'
-  }
+// 查看、编辑、删除功能的占位函数
+const handleView = (index, row) => {
+  console.log('查看:', index, row)
+}
+
+const handleEdit = (index, row) => {
+  console.log('编辑:', index, row)
+}
+
+const handleDelete = (index, row) => {
+  console.log('删除:', index, row)
 }
 
 // 表单元数据
@@ -68,6 +74,7 @@ const formItems = [
     model: 'status',
     label: '状态',
     clearable: true,
+    placeholder: '请选择状态',
     options: [
       { label: '启用', value: true },
       { label: '禁用', value: false },
@@ -77,6 +84,7 @@ const formItems = [
     type: 'select',
     model: 'userType',
     label: '用户类型',
+    placeholder: '请选择用户类型',
     clearable: false,
     options: [
       { label: '系统用户', value: 'sys' },
@@ -85,18 +93,22 @@ const formItems = [
   },
 ]
 
-// 查看、编辑、删除功能的占位函数
-const handleView = (index, row) => {
-  console.log('查看:', index, row)
-}
+// 表格列元数据
+const columns = [
+  { prop: 'name', label: '用户名称', width: '100' },
+  { prop: 'account', label: '账户', width: '120' },
+  { prop: 'telephone', label: '电话', width: '120' },
+  { prop: 'status', label: '状态', width: '80' },
+  { prop: 'userType', label: '用户类型', width: '100' },
+  { prop: 'createTime', label: '创建时间', width: '180' },
+  { prop: 'updateTime', label: '更新时间', width: 'auto', showOverflowTooltip: true }
+]
 
-const handleEdit = (index, row) => {
-  console.log('编辑:', index, row)
-}
-
-const handleDelete = (index, row) => {
-  console.log('删除:', index, row)
-}
+const actions = [
+  { label: '查看', handler: handleView },
+  { label: '编辑', handler: handleEdit },
+  { label: '删除', type: 'danger', handler: handleDelete },
+]
 </script>
 
 <template>
@@ -115,34 +127,18 @@ const handleDelete = (index, row) => {
     </component-query-from>
   </div>
   <div class="sidebar-wrapper table-pagination-container">
-    <el-table :data="tableData.value" style="width: 100%" border stripe>
-      <el-table-column prop="name" label="用户名称" width="100" />
-      <el-table-column prop="account" label="账户" width="120" />
-      <el-table-column prop="telephone" label="电话" width="120" />
-      <el-table-column prop="status" label="状态" width="80">
-        <template #default="scope">
-          <el-tag :type="getType(scope.row.status)">
-            <span>{{ scope.row.status ? '启用' : '禁用' }}</span>
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column prop="userType" label="用户类型" width="100">
-        <template #default="scope">
-          <span>{{ scope.row.userType === 'sys' ? '系统用户' : '普通用户' }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column prop="createTime" label="创建时间" width="180" />
-      <el-table-column prop="updateTime" show-overflow-tooltip label="更新时间" width="auto" />
-      <el-table-column label="操作" width="200">
-        <template #default="scope">
-          <el-button size="small" @click="handleView(scope.$index, scope.row)">查看</el-button>
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)"
-            >删除
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+    <component-query-table :tableData="tableData.value" :columns="columns" :actions="actions">
+      <!-- 自定义状态列 -->
+      <template #status="{ row }">
+        <el-tag :type="row.status ? 'success' : 'danger'">
+          {{ row.status ? '启用' : '禁用' }}
+        </el-tag>
+      </template>
+      <!-- 自定义用户类型列 -->
+      <template #userType="{ row }">
+        <span>{{ row.userType === 'sys' ? '系统用户' : '普通用户' }}</span>
+      </template>
+    </component-query-table>
     <div class="pagination-wrap">
       <component-page :total="tableData.total" :list-page="handleSearch" />
     </div>
