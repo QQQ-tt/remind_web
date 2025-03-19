@@ -2,6 +2,7 @@ import axios from 'axios'
 import ElMsg from '@/util/el-msg'
 import Router from '@/router/router'
 import { useTokenStore } from '@/store/index'
+import { truncateMessage } from '@/util/string-util'
 
 let baseURL = __BACKEND_URL__
 
@@ -52,7 +53,9 @@ instance.interceptors.response.use(
       return
     }
     if (error.response.status === 500) {
-      ElMsg.errorMsg(error.response.data.msg || '请求异常')
+      ElMsg.errorMsg(truncateMessage(error.response.data.msg) || '请求异常')
+    } else {
+      ElMsg.warningMsg(truncateMessage(error.response.data.msg) || '请求异常')
     }
     return Promise.reject(error)
   }
