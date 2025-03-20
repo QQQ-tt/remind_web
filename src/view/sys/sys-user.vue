@@ -152,6 +152,9 @@ const actions = [
       </template>
     </component-query-from>
   </div>
+  <div class="sidebar-wrapper right-align">
+    <el-button type="primary">新增</el-button>
+  </div>
   <div class="sidebar-wrapper table-pagination-container">
     <component-query-table :tableData="tableData.value" :columns="columns" :actions="actions">
       <!-- 自定义状态列 -->
