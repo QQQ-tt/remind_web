@@ -5,12 +5,12 @@ import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
-import {ElementPlusResolver} from 'unplugin-vue-components/resolvers'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 // 根据环境设置后端地址
 const backendUrl = process.env.NODE_ENV === 'production'
   ? 'https://service.qqqtx.com/api'
-  : 'https://service.qqqtx.com/api';
+  : 'http://localhost:9898';
 
 // https://vite.dev/config/
 export default defineConfig({
