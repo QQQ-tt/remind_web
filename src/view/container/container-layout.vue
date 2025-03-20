@@ -8,26 +8,31 @@ import ContainerFooter from '@/view/container/container-footer.vue'
 
 <template>
   <div class="common-layout">
-    <el-container>
+    <el-container style="height: 100vh;">
       <el-aside width="200px">
-        <container-aside/>
+        <container-aside />
       </el-aside>
       <el-container>
         <el-header>
-          <container-header/>
+          <container-header />
         </el-header>
-        <el-main style="padding:5px">
-          <container-main/>
+        <!-- 添加滚动区域 -->
+        <el-main style="padding: 5px; flex: 1; overflow-y: auto;">
+          <container-main />
         </el-main>
-        <el-footer>
-          <container-footer/>
+        <!-- 底部始终固定 -->
+        <el-footer style="flex-shrink: 0; height: 50px;">
+          <container-footer />
         </el-footer>
       </el-container>
     </el-container>
   </div>
 </template>
 
-
 <style scoped>
-
+.common-layout {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 </style>

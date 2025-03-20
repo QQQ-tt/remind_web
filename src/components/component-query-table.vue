@@ -17,15 +17,8 @@ defineProps({
 
 <template>
   <el-table :data="tableData" style="width: 100%" height="462" row-key="id" border stripe>
-    <el-table-column
-      v-for="(col, index) in columns"
-      :key="index"
-      :prop="col.prop"
-      :label="col.label"
-      :width="col.width"
-      :show-overflow-tooltip="col.showOverflowTooltip"
-      :sortable="col.sortable"
-    >
+    <el-table-column v-for="(col, index) in columns" :key="index" :prop="col.prop" :label="col.label" :width="col.width"
+      :min-width="col.minWidth" :show-overflow-tooltip="col.showOverflowTooltip" :sortable="col.sortable">
       <!-- 判断是否有插槽 -->
       <template v-if="$slots[col.prop]" #default="scope">
         <slot :name="col.prop" v-bind="scope" />
@@ -45,13 +38,8 @@ defineProps({
     <!-- 操作列 -->
     <el-table-column v-if="actions.length" label="操作" width="200">
       <template #default="scope">
-        <el-button
-          v-for="(action, index) in actions"
-          :key="index"
-          :type="action.type || 'primary'"
-          size="small"
-          @click="action.handler(scope.$index, scope.row)"
-        >
+        <el-button v-for="(action, index) in actions" :key="index" :type="action.type || 'primary'" size="small"
+          @click="action.handler(scope.$index, scope.row)">
           {{ action.label }}
         </el-button>
       </template>
@@ -59,6 +47,4 @@ defineProps({
   </el-table>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

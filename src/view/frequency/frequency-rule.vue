@@ -64,12 +64,12 @@ const formItems = [
 const columns = [
   { prop: 'name', label: '频次名称', width: '120', showOverflowTooltip: true },
   { prop: 'frequencyCode', label: '频次编码', width: '100', showOverflowTooltip: true },
-  { prop: 'frequencyNumber', label: '执行次数', width: '100'  },
+  { prop: 'frequencyNumber', label: '执行次数', width: '100' },
   { prop: 'frequencyCycle', label: '频次周期', width: '100' },
   { prop: 'cycleUnit', label: '周期单位', width: '100' },
   { prop: 'type', label: '开始方式', width: '100', showOverflowTooltip: true },
   { prop: 'status', label: '频次状态', width: '100', showOverflowTooltip: true },
-  { prop: 'frequencyDesc', label: '频次描述', width: 'auto', showOverflowTooltip: true },
+  { prop: 'frequencyDesc', label: '频次描述', width: 'auto', minWidth: '100', showOverflowTooltip: true },
   {
     prop: 'createTime',
     label: '创建时间',
@@ -123,10 +123,7 @@ const typeSwitch = (e) => {
   <div class="sidebar-wrapper">
     <component-query-from v-model="queryConditions" :form-items="formItems">
       <template #actions>
-        <el-button
-          type="primary"
-          @click="handleSearch(queryConditions.pageNo, queryConditions.pageSize)"
-        >
+        <el-button type="primary" @click="handleSearch(queryConditions.pageNo, queryConditions.pageSize)">
           搜索
         </el-button>
         <el-button @click="handleReset">重置</el-button>
@@ -155,60 +152,5 @@ const typeSwitch = (e) => {
 </template>
 
 <style scoped>
-/* 外部容器 */
-.sidebar-wrapper {
-  margin-top: 10px;
-  background: white;
-  border-radius: 12px;
-  padding: 5px 10px 5px;
-  display: flex;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* 更强的阴影 */
-}
-
-.table-pagination-container {
-  position: relative;
-  min-height: 440px;
-  padding-bottom: 48px; /* 增加底部内边距预留分页空间 */
-}
-
-/* 让表单项在一行内自适应 */
-.form-horizontal {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px; /* 控制表单项间距 */
-}
-
-/* 让输入框和 label 居中 */
-:deep(.el-form-item) {
-  display: flex;
-  align-items: center; /* 保持 label 和 input 垂直居中 */
-  margin-bottom: 0;
-}
-
-.pagination-wrap {
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
-}
-
-@media (max-width: 768px) {
-  .pagination-wrap {
-    justify-content: center; /* 小屏居中 */
-  }
-}
-
-/* 响应式处理，防止小屏幕变形 */
-@media (max-width: 600px) {
-  .form-horizontal {
-    flex-direction: column;
-  }
-
-  .el-form-item {
-    width: 100%;
-  }
-
-  .custom-input {
-    width: 100%;
-  }
-}
+@import '../../style/from-table.css';
 </style>
