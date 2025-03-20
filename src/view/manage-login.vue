@@ -48,20 +48,11 @@ const login = async () => {
           <h1>登录</h1>
         </el-form-item>
         <el-form-item prop="userId">
-          <el-input
-            :prefix-icon="User"
-            placeholder="请输入账户或手机号"
-            v-model="registerData.account"
-          ></el-input>
+          <el-input :prefix-icon="User" placeholder="请输入账户或手机号" v-model="registerData.account"></el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input
-            name="password"
-            :prefix-icon="Lock"
-            type="password"
-            placeholder="请输入密码"
-            v-model="registerData.password"
-          ></el-input>
+          <el-input name="password" :prefix-icon="Lock" type="password" placeholder="请输入密码"
+            v-model="registerData.password"></el-input>
         </el-form-item>
         <el-form-item class="flex">
           <div class="flex">
@@ -71,13 +62,7 @@ const login = async () => {
         </el-form-item>
         <!-- 登录按钮 -->
         <el-form-item>
-          <el-button
-            @click="login()"
-            class="button"
-            type="primary"
-            :loading="loading"
-            auto-insert-space
-            >登录
+          <el-button @click="login()" class="button" type="primary" :loading="loading" auto-insert-space>登录
           </el-button>
         </el-form-item>
       </el-form>
@@ -109,7 +94,7 @@ const login = async () => {
   background-color: #fff;
 
   .bg {
-    background: url('@/asset/GPaVPdLbQAAlW2f.jpg') no-repeat center;
+    background: url('@/asset/1727451625242.jpg') no-repeat center;
     background-size: cover;
     border-radius: 0 20px 20px 0;
   }
