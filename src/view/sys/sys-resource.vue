@@ -4,6 +4,7 @@ import { pageSysResource } from '@/api/sys-api.js'
 import ComponentPage from '@/components/component-page.vue'
 import ComponentQueryFrom from '@/components/component-query-from.vue'
 import ComponentQueryTable from '@/components/component-query-table.vue'
+import { onMounted } from 'vue'
 
 const queryConditions = reactive({
   pageNo: 1,
@@ -24,10 +25,13 @@ const handleSearch = async (pageNo, pageSize) => {
 const initData = async () => {
   await handleSearch(1, 10)
 }
-initData()
+onMounted(() => {
+  initData()
+})
 // 重置功能
 const handleReset = () => {
   queryConditions.name = ''
+  initData()
 }
 
 const tableData = reactive({
@@ -125,14 +129,8 @@ const getTagEffect = (e) => {
 
 <template>
   <div class="sidebar-wrapper">
-    <component-query-from v-model="queryConditions" :form-items="formItems">
-      <template #actions>
-        <el-button type="primary" @click="handleSearch(queryConditions.pageNo, queryConditions.pageSize)">
-          搜索
-        </el-button>
-        <el-button @click="handleReset">重置</el-button>
-      </template>
-    </component-query-from>
+    <component-query-from v-model="queryConditions" :handleSearch="handleSearch" :handleReset="handleReset"
+      :form-items="formItems" />
   </div>
   <div class="sidebar-wrapper right-align">
     <el-button type="primary">新增</el-button>
