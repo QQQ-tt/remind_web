@@ -13,7 +13,7 @@ const handleClear = (model, str) => {
 }
 </script>
 <template>
-  <el-drawer v-model="drawer" title="新增用户" direction="rtl">
+  <el-drawer v-model="drawer" title="新增" direction="rtl">
     <el-form :label-width="80">
       <el-form-item v-for="(item, index) in props.addformItems" :key="index" :label="item.label">
         <el-input v-if="item.type === 'input'" v-model="addFrom[item.model]" :placeholder="item.placeholder"
