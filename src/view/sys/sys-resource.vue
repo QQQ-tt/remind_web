@@ -139,7 +139,7 @@ const addFrom = reactive({
   method: '',
   description: '',
   status: 'false',
-  parentId: '',
+  parentId: 0,
 })
 
 // 取消
@@ -152,7 +152,7 @@ const handleCancel = () => {
   addFrom.method = ''
   addFrom.description = ''
   addFrom.status = 'false'
-  addFrom.parentId = ''
+  addFrom.parentId = 0
 }
 
 // 提交
@@ -170,7 +170,6 @@ const rolesList = async () => {
   await treeResource().then((data) => {
     treeRoute.value = data.data.data
   })
-  console.log('treeRoute:', treeRoute)
 }
 // 计算属性
 const addformItems = computed(() => [
@@ -181,6 +180,7 @@ const addformItems = computed(() => [
     placeholder: '请选择',
     checkStrictly: true,
     clearable: true,
+    clearableValue: 0,
     width: '180px',
     // 记得加上value
     data: treeRoute.value,
