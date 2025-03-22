@@ -1,10 +1,10 @@
 <script setup>
-import { reactive } from 'vue'
-import { pageSysRole } from '@/api/sys-api.js'
+import { reactive, ref, onMounted } from 'vue'
+import { pageSysRole, saveOrUpdateSysRole } from '@/api/sys-api.js'
 import ComponentPage from '@/components/component-page.vue'
 import ComponentQueryFrom from '@/components/component-query-from.vue'
 import ComponentQueryTable from '@/components/component-query-table.vue'
-import { onMounted } from 'vue'
+import ComponentAddFrom from '@/components/component-add-from.vue'
 
 const queryConditions = reactive({
   pageNo: 1,
@@ -26,9 +26,7 @@ const handleSearch = async (pageNo, pageSize) => {
 const initData = async () => {
   await handleSearch(1, 10)
 }
-onMounted(() => {
-  initData()
-})
+
 // 重置功能
 const handleReset = () => {
   queryConditions.name = ''
@@ -104,6 +102,72 @@ const actions = [
   { label: '编辑', handler: handleEdit },
   { label: '删除', type: 'danger', handler: handleDelete },
 ]
+
+// 新增
+const drawer = ref(false)
+const handleAdd = () => {
+  drawer.value = true
+}
+
+const addFrom = reactive({
+  id: '',
+  name: '',
+  status: 'false',
+  remark: '',
+})
+
+// 取消
+const handleCancel = () => {
+  drawer.value = false
+  addFrom.name = ''
+  addFrom.status = 'false'
+  addFrom.remark = ''
+}
+
+// 提交
+const handleSubmit = () => {
+  console.log('提交:', addFrom)
+  saveOrUpdateSysRole(addFrom).then(() => {
+    handleCancel()
+    initData()
+  })
+}
+
+const addformItems = [
+  {
+    type: 'input',
+    model: 'name',
+    label: '用户名称',
+    placeholder: '请输入用户名称',
+    width: '180px',
+    clearable: true,
+  },
+  {
+    type: 'input',
+    model: 'remark',
+    label: '备注',
+    placeholder: '请输入备注',
+    input_type: 'textarea',
+    width: '180px',
+    clearable: true,
+  },
+  {
+    type: 'select',
+    model: 'status',
+    label: '状态',
+    clearable: true,
+    width: '180px',
+    placeholder: '请选择状态',
+    options: [
+      { label: '启用', value: 'true' },
+      { label: '禁用', value: 'false' },
+    ],
+  },
+]
+
+onMounted(() => {
+  initData()
+})
 </script>
 
 <template>
@@ -112,7 +176,7 @@ const actions = [
       :form-items="formItems" />
   </div>
   <div class="sidebar-wrapper right-align">
-    <el-button type="primary">新增</el-button>
+    <el-button type="primary" @click="handleAdd">新增</el-button>
   </div>
   <div class="sidebar-wrapper table-pagination-container">
     <component-query-table :tableData="tableData.value" :columns="columns" :actions="actions">
@@ -127,6 +191,8 @@ const actions = [
       <component-page :total="tableData.total" :list-page="handleSearch" />
     </div>
   </div>
+  <component-add-from v-model:drawer="drawer" v-model:addFrom="addFrom" :addformItems="addformItems"
+    :handleCancel="handleCancel" :handleSubmit="handleSubmit" />
 </template>
 
 <style scoped>

@@ -1,10 +1,10 @@
 <script setup>
-import { reactive } from 'vue'
-import { pageSysResource } from '@/api/sys-api.js'
+import { reactive, ref, computed, onMounted } from 'vue'
+import { pageSysResource, saveOrUpdateSysResource, treeResource } from '@/api/sys-api.js'
 import ComponentPage from '@/components/component-page.vue'
 import ComponentQueryFrom from '@/components/component-query-from.vue'
 import ComponentQueryTable from '@/components/component-query-table.vue'
-import { onMounted } from 'vue'
+import ComponentAddFrom from '@/components/component-add-from.vue'
 
 const queryConditions = reactive({
   pageNo: 1,
@@ -25,9 +25,7 @@ const handleSearch = async (pageNo, pageSize) => {
 const initData = async () => {
   await handleSearch(1, 10)
 }
-onMounted(() => {
-  initData()
-})
+
 // 重置功能
 const handleReset = () => {
   queryConditions.name = ''
@@ -68,9 +66,9 @@ const formItems = [
 const columns = [
   { prop: 'name', label: '资源名称', width: '180', showOverflowTooltip: true },
   { prop: 'url', label: '接口地址/路由地址', width: '200', showOverflowTooltip: true },
+  { prop: 'type', label: '资源类型', width: '100', showOverflowTooltip: true },
   { prop: 'icon', label: '图标', width: '100', showOverflowTooltip: true },
   { prop: 'method', label: '方法类型', width: '100', showOverflowTooltip: true },
-  { prop: 'type', label: '资源类型', width: '100', showOverflowTooltip: true },
   { prop: 'status', label: '资源状态', width: '100', showOverflowTooltip: true },
   { prop: 'description', label: '详细描述', width: 'auto', minWidth: '100', showOverflowTooltip: true },
   {
@@ -112,7 +110,7 @@ const getTagType = (e) => {
     case 'api':
       return 'primary'
     default:
-      return false
+      return 'primary'
   }
 }
 const getTagEffect = (e) => {
@@ -122,9 +120,163 @@ const getTagEffect = (e) => {
     case 'api':
       return 'plain'
     default:
-      return false
+      return 'plain'
   }
 }
+
+// 新增
+const drawer = ref(false)
+const handleAdd = () => {
+  drawer.value = true
+}
+
+const addFrom = reactive({
+  id: '',
+  name: '',
+  url: '',
+  type: '',
+  icon: '',
+  method: '',
+  description: '',
+  status: 'false',
+  parentId: '',
+})
+
+// 取消
+const handleCancel = () => {
+  drawer.value = false
+  addFrom.name = ''
+  addFrom.url = ''
+  addFrom.type = ''
+  addFrom.icon = ''
+  addFrom.method = ''
+  addFrom.description = ''
+  addFrom.status = 'false'
+  addFrom.parentId = ''
+}
+
+// 提交
+const handleSubmit = () => {
+  console.log('提交:', addFrom)
+  saveOrUpdateSysResource(addFrom).then(() => {
+    handleCancel()
+    initData()
+  })
+}
+
+// 路由列表
+let treeRoute = ref([])
+const rolesList = async () => {
+  await treeResource().then((data) => {
+    treeRoute.value = data.data.data
+  })
+  console.log('treeRoute:', treeRoute)
+}
+// 计算属性
+const addformItems = computed(() => [
+  {
+    type: 'tree-select',
+    model: 'parentId',
+    label: '上级资源',
+    placeholder: '请选择',
+    checkStrictly: true,
+    clearable: true,
+    width: '180px',
+    // 记得加上value
+    data: treeRoute.value,
+    props: {
+      label: 'name',
+      value: 'id',
+      children: 'children'
+    }
+  },
+  {
+    type: 'input',
+    model: 'name',
+    label: '资源名称',
+    placeholder: '请输入资源名称',
+    width: '180px',
+    clearable: true,
+  },
+  {
+    type: 'input',
+    model: 'url',
+    label: '地址',
+    placeholder: '请输入接口地址/路由地址',
+    width: '180px',
+    clearable: true,
+  },
+  {
+    type: 'select',
+    model: 'type',
+    label: '资源类型',
+    clearable: true,
+    width: '180px',
+    placeholder: '请选择资源类型',
+    options: [
+      { label: '路由', value: 'route' },
+      { label: '接口', value: 'api' },
+    ],
+  },
+  // **如果选择的是路由，才显示图标**
+  ...(addFrom.type === 'route'
+    ? [
+      {
+        type: 'input',
+        model: 'icon',
+        label: '图标',
+        placeholder: '请输入图标',
+        width: '180px',
+        clearable: true,
+      }
+    ]
+    : []),
+
+  // **如果选择的是接口，才显示方法类型**
+  ...(addFrom.type === 'api'
+    ? [
+      {
+        type: 'select',
+        model: 'method',
+        label: '方法类型',
+        placeholder: '请选择方法类型',
+        width: '180px',
+        clearable: true,
+        options: [
+          { label: 'GET', value: 'GET' },
+          { label: 'POST', value: 'POST' },
+          { label: 'PUT', value: 'PUT' },
+          { label: 'DELETE', value: 'DELETE' },
+        ],
+      }
+    ]
+    : []),
+  {
+    type: 'input',
+    model: 'description',
+    label: '详细描述',
+    placeholder: '请输入详细描述',
+    width: '180px',
+    clearable: true,
+  },
+  {
+    type: 'select',
+    model: 'status',
+    label: '状态',
+    clearable: true,
+    width: '180px',
+    placeholder: '请选择状态',
+    options: [
+      { label: '启用', value: 'true' },
+      { label: '禁用', value: 'false' },
+    ],
+  },
+])
+
+onMounted(() => {
+  initData()
+  rolesList()
+})
 </script>
 
 <template>
@@ -133,7 +285,7 @@ const getTagEffect = (e) => {
       :form-items="formItems" />
   </div>
   <div class="sidebar-wrapper right-align">
-    <el-button type="primary">新增</el-button>
+    <el-button type="primary" @click="handleAdd">新增</el-button>
   </div>
   <div class="sidebar-wrapper table-pagination-container">
     <component-query-table :tableData="tableData.value" :columns="columns" :actions="actions">
@@ -153,6 +305,8 @@ const getTagEffect = (e) => {
       <component-page :total="tableData.total" :list-page="handleSearch" />
     </div>
   </div>
+  <component-add-from v-model:drawer="drawer" v-model:addFrom="addFrom" :addformItems="addformItems"
+    :handleCancel="handleCancel" :handleSubmit="handleSubmit" />
 </template>
 
 <style scoped>

@@ -4,6 +4,7 @@ import { pageSysUser, listSysRole, saveOrUpdateSysUser } from '@/api/sys-api'
 import ComponentPage from '@/components/component-page.vue'
 import ComponentQueryFrom from '@/components/component-query-from.vue'
 import ComponentQueryTable from '@/components/component-query-table.vue'
+import ComponentAddFrom from '@/components/component-add-from.vue'
 
 // 定义查询条件的响应式对象
 const queryConditions = reactive({
@@ -148,6 +149,7 @@ const handleAdd = () => {
 }
 
 const addFrom = reactive({
+  id: '',
   name: '',
   password: '',
   telephone: '',

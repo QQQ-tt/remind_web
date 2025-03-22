@@ -12,11 +12,14 @@ const drawer = defineModel('drawer')
     <el-form :label-width="80">
       <el-form-item v-for="(item, index) in props.addformItems" :key="index" :label="item.label">
         <el-input v-if="item.type === 'input'" v-model="addFrom[item.model]" :placeholder="item.placeholder"
-          :clearable="item.clearable" :style="{ width: item.width || '100%' }" />
+          :clearable="item.clearable" :style="{ width: item.width || '100%' }" :type="item.input_type" />
         <el-select v-if="item.type === 'select'" v-model="addFrom[item.model]" :placeholder="item.placeholder"
           :clearable="item.clearable" :style="{ width: item.width || '100%' }">
           <el-option v-for="(opt, idx) in item.options" :key="idx" :label="opt.label" :value="opt.value" />
         </el-select>
+        <el-tree-select v-if="item.type === 'tree-select'" v-model="addFrom[item.model]" :placeholder="item.placeholder"
+          :check-strictly="item.checkStrictly" :clearable="item.clearable" :style="{ width: item.width || '100%' }"
+          :data="item.data" :props="item.props" />
       </el-form-item>
     </el-form>
     <div class="form-buttons">
