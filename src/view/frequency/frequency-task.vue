@@ -154,7 +154,7 @@ const handleSubmit = () => {
   addFrom.endTime = addFrom.dateRange[1]
   const submitData = { ...addFrom }
   delete submitData.dateRange
-  saveOrUpdateTask(addFrom).then(() => {
+  saveOrUpdateTask(submitData).then(() => {
     handleCancel()
     initData()
     loading.value = false

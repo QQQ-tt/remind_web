@@ -141,7 +141,6 @@ const addFrom = reactive({
   cycleUnit: '',
   type: '',
   status: 'false',
-  remark: '',
 })
 
 // 取消
@@ -153,7 +152,11 @@ const handleCancel = () => {
 const loading = ref(false)
 const handleSubmit = () => {
   loading.value = true
-  saveOrUpdateFrequencyRule(addFrom).then(() => {
+  const submitData = { ...addFrom }
+  if (addFrom.cycleUnit !== 'WEEK') {
+    delete submitData.type
+  }
+  saveOrUpdateFrequencyRule(submitData).then(() => {
     handleCancel()
     initData()
     loading.value = false
