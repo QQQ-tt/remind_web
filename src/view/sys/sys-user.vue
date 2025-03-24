@@ -221,16 +221,9 @@ const addformItems = computed(() => [
     options: roles.value,
   },
   {
-    type: 'select',
+    type: 'switch',
     model: 'status',
-    label: '状态',
-    clearable: true,
-    width: '180px',
-    placeholder: '请选择状态',
-    options: [
-      { label: '启用', value: 'true' },
-      { label: '禁用', value: 'false' },
-    ],
+    label: '启用状态',
   },
 ])
 
