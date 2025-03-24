@@ -126,7 +126,6 @@ const handleCancel = () => {
 
 // 提交
 const handleSubmit = () => {
-  console.log('提交:', addFrom)
   saveOrUpdateSysRole(addFrom).then(() => {
     handleCancel()
     initData()

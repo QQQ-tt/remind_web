@@ -12,12 +12,9 @@ watch(drawer, (newVal) => {
   console.log(newVal);
   if (!newVal) {
     props.addformItems.forEach((item) => {
-      console.log('label:', item.label, 'clearableValue:', item.clearableValue)
-      console.log(item.clearableValue !== undefined)
       addFrom.value[item.model] = item.clearableValue !== undefined ? item.clearableValue : ''
     });
   }
-  console.log(addFrom.value)
 });
 
 const handleClear = (model, str) => {
@@ -25,7 +22,7 @@ const handleClear = (model, str) => {
 }
 </script>
 <template>
-  <el-drawer v-model="drawer" title="新增" direction="rtl">
+  <el-drawer v-model="drawer" title="新增" direction="rtl" size="45%">
     <el-form :label-width="80">
       <el-form-item v-for="(item, index) in props.addformItems" :key="index" :label="item.label">
         <el-input v-if="item.type === 'input'" v-model="addFrom[item.model]" :placeholder="item.placeholder"
@@ -37,8 +34,10 @@ const handleClear = (model, str) => {
         <el-tree-select v-else-if="item.type === 'tree-select'" @clear="handleClear(item.model, item.clearableValue)"
           v-model="addFrom[item.model]" :placeholder="item.placeholder" :check-strictly="item.checkStrictly"
           :clearable="item.clearable" :style="{ width: item.width || '100%' }" :data="item.data" :props="item.props" />
-        <el-date-picker v-else-if="item.type === 'date'" v-model="addFrom[item.model]" :placeholder="item.placeholder"
-          :clearable="item.clearable" :style="{ width: item.width || '100%' }" :type="item.date_type" />
+        <div v-else-if="item.type === 'date'" :style="{ width: item.width || '100%' }">
+          <el-date-picker v-model="addFrom[item.model]" :clearable="item.clearable" :type="item.date_type"
+            start-placeholder="开始时间" end-placeholder="结束时间" :format="item.format" :value-format="item.format" />
+        </div>
         <el-time-picker v-else-if="item.type === 'time'" v-model="addFrom[item.model]" :placeholder="item.placeholder"
           :clearable="item.clearable" :style="{ width: item.width || '100%' }" :is-range="item.isRange" />
         <el-switch v-else-if="item.type === 'switch'" v-model="addFrom[item.model]" :active-text="item.activeText"

@@ -1,10 +1,9 @@
 <script setup>
-import { reactive } from 'vue'
-import { pageFrequencyTask } from '@/api/frequency-api'
+import { reactive, onMounted, ref, computed } from 'vue'
+import { pageFrequencyTask, saveOrUpdateTask, listFrequencyRule } from '@/api/frequency-api'
 import ComponentPage from '@/components/component-page.vue'
 import ComponentQueryFrom from '@/components/component-query-from.vue'
 import ComponentQueryTable from '@/components/component-query-table.vue'
-import { onMounted } from 'vue'
 
 const queryConditions = reactive({
   pageNo: 1,
@@ -25,9 +24,6 @@ const handleSearch = async (pageNo, pageSize) => {
 const initData = async () => {
   await handleSearch(1, 10)
 }
-onMounted(() => {
-  initData()
-})
 
 // 重置功能
 const handleReset = () => {
@@ -120,6 +116,117 @@ const typeSwitch = (e) => {
       return '未使用'
   }
 }
+
+// 新增
+const drawer = ref(false)
+const handleAdd = () => {
+  drawer.value = true
+}
+const addFrom = reactive({
+  name: '',
+  startTime: '',
+  endTime: '',
+  remark: '',
+  status: false,
+  isRemind: false,
+  remindType: '',
+  frequencyId: '',
+  dateRange: [],
+})
+
+// 取消
+const handleCancel = () => {
+  drawer.value = false
+}
+
+// 提交
+const handleSubmit = () => {
+  addFrom.startTime = addFrom.dateRange[0]
+  addFrom.endTime = addFrom.dateRange[1]
+  const submitData = { ...addFrom }
+  delete submitData.dateRange
+  saveOrUpdateTask(addFrom).then(() => {
+    handleCancel()
+    initData()
+  })
+}
+
+// 频率规则
+const frequencyRuleList = ref([])
+const getFrequencyRuleList = async () => {
+  await listFrequencyRule().then((data) => {
+    frequencyRuleList.value = data.data.data.map((item) => ({
+      label: item.name,
+      value: item.id,
+    }))
+  })
+}
+
+// 计算属性
+const addformItems = computed(() => [
+  {
+    type: 'input',
+    model: 'name',
+    label: '任务名称',
+    placeholder: '请输入任务名称',
+    width: '180px',
+    clearable: true,
+  },
+  {
+    type: 'date',
+    date_type: 'datetimerange',
+    model: 'dateRange',
+    label: '选择时间',
+    format: 'YYYY-MM-DD HH:mm:ss',
+    width: '250px',
+  },
+  {
+    type: 'input',
+    model: 'remark',
+    label: '备注',
+    placeholder: '请输入备注',
+    input_type: 'textarea',
+    width: '180px',
+    clearable: true,
+  },
+  {
+    type: 'switch',
+    model: 'status',
+    label: '启用状态',
+  },
+  {
+    type: 'switch',
+    model: 'isRemind',
+    label: '是否提醒',
+  },
+  ...(addFrom.isRemind === true ? [{
+    type: 'select',
+    model: 'remindType',
+    label: '提醒类型',
+    clearable: true,
+    width: '180px',
+    placeholder: '请选择提醒类型',
+    options: [
+      { label: '短信', value: 'remind_text' },
+      { label: '邮件', value: 'remind_email' },
+      { label: '微信', value: 'remind_wx' },
+    ],
+  }] : []),
+  {
+    type: 'select',
+    model: 'frequencyId',
+    label: '频率规则',
+    placeholder: '请选择频率',
+    width: '180px',
+    clearable: true,
+    options: frequencyRuleList.value,
+  },
+])
+
+onMounted(() => {
+  initData()
+  getFrequencyRuleList()
+})
 </script>
 
 <template>
@@ -128,7 +235,7 @@ const typeSwitch = (e) => {
       :form-items="formItems" />
   </div>
   <div class="sidebar-wrapper right-align">
-    <el-button type="primary">新增</el-button>
+    <el-button type="primary" @click="handleAdd">新增</el-button>
   </div>
   <div class="sidebar-wrapper table-pagination-container">
     <component-query-table :tableData="tableData.value" :columns="columns" :actions="actions">
@@ -149,6 +256,8 @@ const typeSwitch = (e) => {
       <component-page :total="tableData.total" :list-page="handleSearch" />
     </div>
   </div>
+  <component-add-from v-model:drawer="drawer" v-model:addFrom="addFrom" :addformItems="addformItems"
+    :handleCancel="handleCancel" :handleSubmit="handleSubmit" />
 </template>
 
 <style scoped>
