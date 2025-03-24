@@ -156,10 +156,15 @@ const handleCancel = () => {
 }
 
 // 提交
+const loading = ref(false)
 const handleSubmit = () => {
+  loading.value = true
   saveOrUpdateSysResource(addFrom).then(() => {
     handleCancel()
     initData()
+    loading.value = false
+  }).catch(() => {
+    loading.value = false
   })
 }
 
@@ -297,8 +302,8 @@ onMounted(() => {
       <component-page :total="tableData.total" :list-page="handleSearch" />
     </div>
   </div>
-  <component-add-from v-model:drawer="drawer" v-model:addFrom="addFrom" :addformItems="addformItems"
-    :handleCancel="handleCancel" :handleSubmit="handleSubmit" />
+  <component-add-from v-model:drawer="drawer" v-model:addFrom="addFrom" v-model:loading="loading"
+    :addformItems="addformItems" :handleCancel="handleCancel" :handleSubmit="handleSubmit" />
 </template>
 
 <style scoped>

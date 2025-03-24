@@ -7,6 +7,7 @@ const props = defineProps({
 });
 const addFrom = defineModel('addFrom')
 const drawer = defineModel('drawer')
+const loading = defineModel('loading')
 
 watch(drawer, (newVal) => {
   console.log(newVal);
@@ -54,7 +55,7 @@ const handleClear = (model, str) => {
     </el-form>
     <template #footer>
       <div class="form-buttons">
-        <el-button type="primary" @click="handleSubmit">
+        <el-button type="primary" @click="handleSubmit" :loading="loading">
           提交
         </el-button>
         <el-button @click="handleCancel">取消</el-button>

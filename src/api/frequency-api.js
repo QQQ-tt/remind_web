@@ -4,6 +4,10 @@ export function pageFrequencyRule(e) {
   return Request.post('remind/frequencyRule/pageFrequency', { ...e }, { noSuccessMsg: true })
 }
 
+export function saveOrUpdateFrequencyRule(e) {
+  return Request.post('remind/frequencyRule/saveOrUpdateFrequency', { ...e })
+}
+
 export function listFrequencyRule() {
   return Request.get('remind/frequencyRule/listFrequency', { noSuccessMsg: true })
 }

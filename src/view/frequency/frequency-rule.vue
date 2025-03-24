@@ -1,10 +1,9 @@
 <script setup>
-import { reactive } from 'vue'
-import { pageFrequencyRule } from '@/api/frequency-api'
+import { reactive, ref, onMounted, computed } from 'vue'
+import { pageFrequencyRule, saveOrUpdateFrequencyRule } from '@/api/frequency-api'
 import ComponentPage from '@/components/component-page.vue'
 import ComponentQueryFrom from '@/components/component-query-from.vue'
 import ComponentQueryTable from '@/components/component-query-table.vue'
-import { onMounted } from 'vue'
 
 const queryConditions = reactive({
   pageNo: 1,
@@ -25,9 +24,6 @@ const handleSearch = async (pageNo, pageSize) => {
 const initData = async () => {
   await handleSearch(1, 10)
 }
-onMounted(() => {
-  initData()
-})
 
 // 重置功能
 const handleReset = () => {
@@ -119,9 +115,126 @@ const typeSwitch = (e) => {
     case 'LOGIC_WEEK':
       return '逻辑周'
     default:
-      return '未使用'
+      return ''
   }
 }
+
+// 新增
+const drawer = ref(false)
+const handleAdd = () => {
+  drawer.value = true
+}
+
+const addFrom = reactive({
+  id: '',
+  frequencyName: '',
+  frequencyCode: '',
+  frequencyDesc: '',
+  frequencyNumber: '',
+  frequencyCycle: '',
+  cycleUnit: '',
+  type: '',
+  status: 'false',
+  remark: '',
+})
+
+// 取消
+const handleCancel = () => {
+  drawer.value = false
+}
+
+// 提交
+const loading = ref(false)
+const handleSubmit = () => {
+  loading.value = true
+  saveOrUpdateFrequencyRule(addFrom).then(() => {
+    handleCancel()
+    initData()
+    loading.value = false
+  }).catch(() => {
+    loading.value = false
+  })
+}
+
+// 新增表单元数据（计算属性）
+const addformItems = computed(() => [
+  {
+    type: 'input',
+    model: 'frequencyName',
+    label: '频次名称',
+    placeholder: '请输入频次名称',
+    width: '180px',
+    clearable: true,
+  },
+  {
+    type: 'input',
+    model: 'frequencyCode',
+    label: '频次编码',
+    placeholder: '请输入频次编码',
+    width: '180px',
+    clearable: true,
+  },
+  {
+    type: 'input',
+    model: 'frequencyNumber',
+    label: '执行次数',
+    placeholder: '请输入执行次数',
+    width: '180px',
+    clearable: true,
+  },
+  {
+    type: 'input',
+    model: 'frequencyCycle',
+    label: '频次周期',
+    placeholder: '请输入频次周期',
+    width: '180px',
+    clearable: true,
+  },
+  {
+    type: 'select',
+    model: 'cycleUnit',
+    label: '周期单位',
+    placeholder: '请选择周期单位',
+    width: '180px',
+    clearable: true,
+    options: [
+      { label: '小时', value: 'HOUR' },
+      { label: '天', value: 'DAY' },
+      { label: '周', value: 'WEEK' },
+      { label: '月', value: 'MONTH' },
+    ],
+  },
+  ...(addFrom.cycleUnit === 'WEEK' ? [
+    {
+      type: 'select',
+      model: 'type',
+      label: '开始方式',
+      placeholder: '请选择开始方式',
+      width: '180px',
+      clearable: true,
+      options: [
+        { label: '自然周', value: 'NATURAL_WEEK' },
+        { label: '逻辑周', value: 'LOGIC_WEEK' },
+      ],
+    },] : []),
+  {
+    type: 'switch',
+    model: 'status',
+    label: '频次状态',
+  },
+  {
+    type: 'input',
+    model: 'frequencyDesc',
+    label: '频次描述',
+    placeholder: '请输入频次描述',
+    input_type: 'textarea',
+    width: '180px',
+  },
+])
+
+onMounted(() => {
+  initData()
+})
 </script>
 
 <template>
@@ -130,7 +243,7 @@ const typeSwitch = (e) => {
       :form-items="formItems" />
   </div>
   <div class="sidebar-wrapper right-align">
-    <el-button type="primary">新增</el-button>
+    <el-button type="primary" @click="handleAdd">新增</el-button>
   </div>
   <div class="sidebar-wrapper table-pagination-container">
     <component-query-table :tableData="tableData.value" :columns="columns" :actions="actions">
@@ -151,6 +264,8 @@ const typeSwitch = (e) => {
       <component-page :total="tableData.total" :list-page="handleSearch" />
     </div>
   </div>
+  <component-add-from v-model:drawer="drawer" v-model:addFrom="addFrom" v-model:loading="loading"
+    :addformItems="addformItems" :handleCancel="handleCancel" :handleSubmit="handleSubmit" />
 </template>
 
 <style scoped>

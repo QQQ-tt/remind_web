@@ -123,6 +123,7 @@ const handleAdd = () => {
   drawer.value = true
 }
 const addFrom = reactive({
+  id: '',
   name: '',
   startTime: '',
   endTime: '',
@@ -140,7 +141,9 @@ const handleCancel = () => {
 }
 
 // 提交
+const loading = ref(false)
 const handleSubmit = () => {
+  loading.value = true
   addFrom.startTime = addFrom.dateRange[0]
   addFrom.endTime = addFrom.dateRange[1]
   const submitData = { ...addFrom }
@@ -148,6 +151,9 @@ const handleSubmit = () => {
   saveOrUpdateTask(addFrom).then(() => {
     handleCancel()
     initData()
+    loading.value = false
+  }).catch(() => {
+    loading.value = false
   })
 }
 
@@ -162,7 +168,7 @@ const getFrequencyRuleList = async () => {
   })
 }
 
-// 计算属性
+// 新增表单元数据（计算属性）
 const addformItems = computed(() => [
   {
     type: 'input',
@@ -256,8 +262,8 @@ onMounted(() => {
       <component-page :total="tableData.total" :list-page="handleSearch" />
     </div>
   </div>
-  <component-add-from v-model:drawer="drawer" v-model:addFrom="addFrom" :addformItems="addformItems"
-    :handleCancel="handleCancel" :handleSubmit="handleSubmit" />
+  <component-add-from v-model:drawer="drawer" v-model:addFrom="addFrom" v-model:loading="loading"
+    :addformItems="addformItems" :handleCancel="handleCancel" :handleSubmit="handleSubmit" />
 </template>
 
 <style scoped>
