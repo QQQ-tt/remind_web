@@ -1,10 +1,11 @@
 <script setup>
 import { reactive, ref, onMounted } from 'vue'
-import { pageSysRole, saveOrUpdateSysRole } from '@/api/sys-api.js'
+import { pageSysRole, saveOrUpdateSysRole, removeSysRoleByRoleId } from '@/api/sys-api.js'
 import ComponentPage from '@/components/component-page.vue'
 import ComponentQueryFrom from '@/components/component-query-from.vue'
 import ComponentQueryTable from '@/components/component-query-table.vue'
 import ComponentAddFrom from '@/components/component-add-from.vue'
+import ElBoxMsg from '@/util/el-box-msg'
 
 const queryConditions = reactive({
   pageNo: 1,
@@ -49,7 +50,12 @@ const handleEdit = (index, row) => {
 }
 
 const handleDelete = (index, row) => {
-  console.log('删除:', index, row)
+  ElBoxMsg.confirmAction('确定删除该角色吗？', () => {
+    removeSysRoleByRoleId(row.id).then(() => {
+      initData()
+    })
+  }
+  )
 }
 
 // 表单元数据

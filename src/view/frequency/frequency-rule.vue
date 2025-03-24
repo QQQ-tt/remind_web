@@ -1,9 +1,10 @@
 <script setup>
 import { reactive, ref, onMounted, computed } from 'vue'
-import { pageFrequencyRule, saveOrUpdateFrequencyRule } from '@/api/frequency-api'
+import { pageFrequencyRule, saveOrUpdateFrequencyRule, removeFrequencyRuleById } from '@/api/frequency-api'
 import ComponentPage from '@/components/component-page.vue'
 import ComponentQueryFrom from '@/components/component-query-from.vue'
 import ComponentQueryTable from '@/components/component-query-table.vue'
+import ElBoxMsg from '@/util/el-box-msg'
 
 const queryConditions = reactive({
   pageNo: 1,
@@ -46,7 +47,12 @@ const handleEdit = (index, row) => {
 }
 
 const handleDelete = (index, row) => {
-  console.log('删除:', index, row)
+  ElBoxMsg.confirmAction('确定删除该角色吗？', () => {
+    removeFrequencyRuleById(row.id).then(() => {
+      initData()
+    })
+  }
+  )
 }
 
 // 表单元数据

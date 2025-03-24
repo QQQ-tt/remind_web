@@ -12,10 +12,18 @@ export function listFrequencyRule() {
   return Request.get('remind/frequencyRule/listFrequency', { noSuccessMsg: true })
 }
 
+export function removeFrequencyRuleById(e) {
+  return Request.delete('remind/frequencyRule/removeFrequencyById', { params: { id: e } })
+}
+
 export function pageFrequencyTask(e) {
   return Request.post('remind/remindTask/pageTask', { ...e }, { noSuccessMsg: true })
 }
 
 export function saveOrUpdateTask(e) {
   return Request.post('remind/remindTask/saveOrUpdateTask', { ...e })
+}
+
+export function removeFrequencyTaskById(e) {
+  return Request.delete('remind/remindTask/removeTaskById', { params: { id: e } })
 }

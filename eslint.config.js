@@ -27,6 +27,8 @@ export default [
       globals: {
         process: true,
         ElMessage: true,
+        ElMessageBox: true,
+        ElNotification: true,
         "__BACKEND_URL__": "readonly"  // 声明为只读全局变量
       },
     },
