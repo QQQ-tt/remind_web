@@ -4,6 +4,7 @@ const props = defineProps({
   addformItems: Array,
   handleCancel: Function,
   handleSubmit: Function,
+  rules: Object
 });
 const addFrom = defineModel('addFrom')
 const drawer = defineModel('drawer')
@@ -24,8 +25,8 @@ const handleClear = (model, str) => {
 </script>
 <template>
   <el-drawer v-model="drawer" title="新增" direction="rtl" size="45%">
-    <el-form :label-width="80">
-      <el-form-item v-for="(item, index) in props.addformItems" :key="index" :label="item.label">
+    <el-form :model="addFrom" :rules="props.rules" :label-width="80">
+      <el-form-item v-for="(item, index) in props.addformItems" :key="index" :label="item.label" :prop="item.model">
         <el-input v-if="item.type === 'input'" v-model="addFrom[item.model]" :placeholder="item.placeholder"
           :clearable="item.clearable" :style="{ width: item.width || '100%' }" :type="item.input_type" />
         <el-select v-else-if="item.type === 'select'" v-model="addFrom[item.model]" :placeholder="item.placeholder"

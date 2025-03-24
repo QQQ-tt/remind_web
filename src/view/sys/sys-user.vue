@@ -232,6 +232,19 @@ const addformItems = computed(() => [
   },
 ])
 
+// 定义表单校验规则
+const rules = reactive({
+  name: [
+    { required: true, message: '请输入用户名称', trigger: 'blur' },
+  ],
+  password: [
+    { required: true, message: '请输入密码', trigger: 'blur' },
+  ],
+  telephone: [
+    { required: true, message: '请输入电话', trigger: 'blur' },
+  ],
+})
+
 onMounted(() => {
   initData()
   rolesList()
@@ -264,7 +277,7 @@ onMounted(() => {
     </div>
   </div>
   <component-add-from v-model:drawer="drawer" v-model:addFrom="addFrom" v-model:loading="loading"
-    :addformItems="addformItems" :handleCancel="handleCancel" :handleSubmit="handleSubmit" />
+    :addformItems="addformItems" :handleCancel="handleCancel" :handleSubmit="handleSubmit" :rules="rules" />
 </template>
 
 <style scoped>

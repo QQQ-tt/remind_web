@@ -229,6 +229,19 @@ const addformItems = computed(() => [
   },
 ])
 
+// 定义表单校验规则
+const rules = reactive({
+  name: [
+    { required: true, message: '请输入任务名称', trigger: 'blur' },
+  ],
+  dateRange: [
+    { required: true, message: '请选择时间', trigger: 'blur' },
+  ],
+  frequencyId: [
+    { required: true, message: '请选择频率', trigger: 'blur' },
+  ],
+})
+
 onMounted(() => {
   initData()
   getFrequencyRuleList()
@@ -263,7 +276,7 @@ onMounted(() => {
     </div>
   </div>
   <component-add-from v-model:drawer="drawer" v-model:addFrom="addFrom" v-model:loading="loading"
-    :addformItems="addformItems" :handleCancel="handleCancel" :handleSubmit="handleSubmit" />
+    :addformItems="addformItems" :handleCancel="handleCancel" :handleSubmit="handleSubmit" :rules="rules" />
 </template>
 
 <style scoped>
