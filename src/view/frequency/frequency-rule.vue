@@ -230,6 +230,7 @@ const addformItems = computed(() => [
     type: 'switch',
     model: 'status',
     label: '频次状态',
+    clearableValue: false,
   },
   {
     type: 'input',

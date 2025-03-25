@@ -11,7 +11,6 @@ const drawer = defineModel('drawer')
 const loading = defineModel('loading')
 
 watch(drawer, (newVal) => {
-  console.log(newVal);
   if (!newVal) {
     props.addformItems.forEach((item) => {
       addFrom.value[item.model] = item.clearableValue !== undefined ? item.clearableValue : ''
@@ -22,6 +21,11 @@ watch(drawer, (newVal) => {
 const handleClear = (model, str) => {
   addFrom.value[model] = str !== undefined ? str : '';
 }
+
+const defaultTime = [
+  new Date(2000, 1, 1, 0, 0, 0),
+  new Date(2000, 2, 1, 23, 59, 59),
+]
 </script>
 <template>
   <el-drawer v-model="drawer" title="新增" direction="rtl" size="45%">
@@ -38,11 +42,13 @@ const handleClear = (model, str) => {
           :clearable="item.clearable" :style="{ width: item.width || '100%' }" :data="item.data" :props="item.props" />
         <div v-else-if="item.type === 'date'" :style="{ width: item.width || '100%' }">
           <el-date-picker v-model="addFrom[item.model]" :clearable="item.clearable" :type="item.date_type"
-            start-placeholder="开始时间" end-placeholder="结束时间" :format="item.format" :value-format="item.format" />
+            start-placeholder="开始时间" end-placeholder="结束时间" :format="item.format" :value-format="item.format"
+            :default-time="defaultTime" />
         </div>
         <el-time-picker v-else-if="item.type === 'time'" v-model="addFrom[item.model]" :placeholder="item.placeholder"
           :clearable="item.clearable" :style="{ width: item.width || '100%' }" :is-range="item.isRange" />
-        <el-switch v-else-if="item.type === 'switch'" v-model="addFrom[item.model]" :active-text="item.activeText"
+        <el-switch v-else-if="item.type === 'switch'" v-model="addFrom[item.model]" inline-prompt
+          style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949" :active-text="item.activeText"
           :inactive-text="item.inactiveText" :active-value="item.activeValue" :inactive-value="item.inactiveValue" />
         <el-radio-group v-else-if="item.type === 'radio'" v-model="addFrom[item.model]"
           :style="{ width: item.width || '100%' }">

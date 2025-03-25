@@ -273,6 +273,7 @@ const addformItems = computed(() => [
     type: 'switch',
     model: 'status',
     label: '启用状态',
+    clearableValue: false,
   },
 ])
 

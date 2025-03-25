@@ -74,6 +74,7 @@ const columns = [
   { prop: 'endTime', label: '结束时间', width: '180', showOverflowTooltip: true },
   { prop: 'pushNum', label: '推送次数', width: '100' },
   { prop: 'num', label: '提醒次数', width: '100' },
+  { prop: 'status', label: '任务状态', width: '100', showOverflowTooltip: true },
   { prop: 'remark', label: '备注', width: 'auto', minWidth: '100', showOverflowTooltip: true },
   {
     prop: 'createTime',
@@ -154,6 +155,9 @@ const handleSubmit = () => {
   addFrom.endTime = addFrom.dateRange[1]
   const submitData = { ...addFrom }
   delete submitData.dateRange
+  if (submitData.isRemind === false) {
+    delete submitData.remindType
+  }
   saveOrUpdateTask(submitData).then(() => {
     handleCancel()
     initData()
@@ -205,11 +209,13 @@ const addformItems = computed(() => [
     type: 'switch',
     model: 'status',
     label: '启用状态',
+    clearableValue: false,
   },
   {
     type: 'switch',
     model: 'isRemind',
     label: '是否提醒',
+    clearableValue: false,
   },
   ...(addFrom.isRemind === true ? [{
     type: 'select',
@@ -246,6 +252,9 @@ const rules = reactive({
   frequencyId: [
     { required: true, message: '请选择频率', trigger: 'blur' },
   ],
+  remindType: [
+    { required: true, message: '请选择频率', trigger: 'blur' },
+  ],
 })
 
 onMounted(() => {
@@ -270,7 +279,6 @@ onMounted(() => {
       <template #type="{ row }">
         <span>{{ typeSwitch(row.type) }}</span>
       </template>
-
       <template #status="{ row }">
         <el-tag :type="row.status ? 'success' : 'danger'">
           {{ row.status ? '启用' : '禁用' }}
