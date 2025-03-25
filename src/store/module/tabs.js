@@ -18,7 +18,7 @@ export const useTabsStore = defineStore('tabs', {
         }
       } else {
         // 初始化默认标签页
-        const dashboardLogRoute = router.getRoutes().find((route) => route.name === 'dashboardLog')
+        const dashboardLogRoute = router.getRoutes().find((route) => route.name === 'dashboardService')
         if (dashboardLogRoute) {
           this.addTab({
             name: dashboardLogRoute.name,
@@ -27,7 +27,7 @@ export const useTabsStore = defineStore('tabs', {
             icon: dashboardLogRoute.meta.icon || 'Document',
           })
         }
-        if (route.name !== 'dashboardLog') {
+        if (route.name !== 'dashboardService') {
           this.addTab({
             name: route.name,
             path: route.path,
@@ -50,6 +50,10 @@ export const useTabsStore = defineStore('tabs', {
       } else if (this.tabs.length === 0) {
         this.activeTab = ''
       }
+    },
+    clearTab() {
+      this.tabs = []
+      this.activeTab = ''
     },
   },
   persist: true,

@@ -18,17 +18,30 @@ const router = createRouter({
     {
       path: '/dashboard',
       name: 'dashboard',
+      meta: {
+        title: '仪表盘',
+        icon: 'Monitor',
+      },
       component: () => import('@/view/container/container-layout.vue'),
-      redirect: { name: 'dashboardLog' },
+      redirect: { name: 'dashboardService' },
       children: [
         {
-          path: 'log',
-          name: 'dashboardLog',
+          path: 'service',
+          name: 'dashboardService',
           meta: {
-            title: '仪表盘',
-            icon: 'Monitor',
+            title: '业务仪表盘',
+            icon: 'Chicken',
           },
-          component: () => import('@/view/dashboard/dashboard-log.vue'),
+          component: () => import('@/view/dashboard/dashboard-service.vue'),
+        },
+        {
+          path: 'sys',
+          name: 'dashboardSys',
+          meta: {
+            title: '系统仪表盘',
+            icon: 'CoffeeCup',
+          },
+          component: () => import('@/view/dashboard/dashboard-sys.vue'),
         },
       ],
     },

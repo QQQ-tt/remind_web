@@ -3,9 +3,7 @@
 </script>
 
 <template>
-  log
+  sys
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

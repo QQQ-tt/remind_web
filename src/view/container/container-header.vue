@@ -2,10 +2,11 @@
 import { useRoute } from 'vue-router'
 import { computed } from 'vue'
 import { ArrowDown } from '@element-plus/icons-vue'
-import { useTokenStore } from '@/store/index'
+import { useTokenStore, useTabsStore } from '@/store/index'
 import router from '@/router/router'
 
 const userInfo = useTokenStore()
+const tabsStore = useTabsStore()
 // 模拟用户信息
 const user = {
   name: userInfo.name || '张三',
@@ -31,6 +32,7 @@ const breadcrumbs = computed(() => {
 
 const logout = () => {
   userInfo.removeToken()
+  tabsStore.clearTab()
   router.push({ name: 'login' })
 }
 </script>
@@ -40,12 +42,8 @@ const logout = () => {
     <el-col :span="18">
       <el-breadcrumb separator="/">
         <!-- 动态生成的面包屑项 -->
-        <el-breadcrumb-item
-          v-for="(item, index) in breadcrumbs"
-          :key="index"
-          :to="item.path"
-          :replace="index === breadcrumbs.length - 1"
-        >
+        <el-breadcrumb-item v-for="(item, index) in breadcrumbs" :key="index" :to="item.path"
+          :replace="index === breadcrumbs.length - 1">
           <!-- 面包屑项内容 -->
           <span v-if="index === breadcrumbs.length - 1">{{ item.name }}</span>
           <router-link v-else :to="item.path">{{ item.name }}</router-link>
@@ -82,8 +80,10 @@ const logout = () => {
 /* 基础布局 */
 .el-row {
   margin-bottom: 20px;
-  align-items: center; /* 垂直居中 */
+  align-items: center;
+  /* 垂直居中 */
 }
+
 .el-row:last-child {
   margin-bottom: 0;
 }
