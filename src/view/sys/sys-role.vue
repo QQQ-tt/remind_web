@@ -193,6 +193,7 @@ const resourceItems = computed(() => [
     model: 'resourceIds',
     data: treeData.value,
     showCheckbox: true,
+    labelWidth: '10',
     clearableValue: [],
     props: {
       children: 'children',
