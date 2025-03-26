@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, ref, computed, onMounted } from 'vue'
-import { pageSysUser, listSysRole, saveOrUpdateSysUser, removeSysUserByUserId } from '@/api/sys-api'
+import { pageSysUser, listSysRole, saveOrUpdateSysUser, removeSysUserByUserId, getSysUserById } from '@/api/sys-api'
 import ComponentPage from '@/components/component-page.vue'
 import ComponentQueryFrom from '@/components/component-query-from.vue'
 import ComponentQueryTable from '@/components/component-query-table.vue'
@@ -51,10 +51,6 @@ const tableData = reactive({
 // 查看、编辑、删除功能的占位函数
 const handleView = (index, row) => {
   console.log('查看:', index, row)
-}
-
-const handleEdit = (index, row) => {
-  console.log('编辑:', index, row)
 }
 
 const handleDelete = (index, row) => {
@@ -122,7 +118,7 @@ const formItems = [
 const columns = [
   { prop: 'name', label: '用户名称', width: '100' },
   { prop: 'account', label: '账户', width: '120' },
-  { prop: 'telephone', label: '电话', width: '120' },
+  { prop: 'encryptedTelephone', label: '电话', width: '120' },
   { prop: 'status', label: '状态', width: '80' },
   { prop: 'sysRoleName', label: '角色名称', width: '100' },
   { prop: 'userType', label: '用户类型', width: 'auto', minWidth: '100' },
@@ -142,14 +138,9 @@ const columns = [
   },
 ]
 
-const actions = [
-  { label: '查看', handler: handleView },
-  { label: '编辑', handler: handleEdit },
-  { label: '删除', type: 'danger', handler: handleDelete },
-]
-
 // 新增
 const drawer = ref(false)
+const update = ref(false)
 const handleAdd = () => {
   drawer.value = true
 }
@@ -163,29 +154,35 @@ const addFrom = reactive({
   status: 'false',
 })
 
-// 取消
-const handleCancel = () => {
-  drawer.value = false
-  addFrom.name = ''
-  addFrom.sysRoleId = ''
-  addFrom.password = ''
-  addFrom.telephone = ''
-  addFrom.status = 'false'
-}
-
 // 提交
 const loading = ref(false)
 const handleSubmit = () => {
   loading.value = true
   saveOrUpdateSysUser(addFrom).then(() => {
-    handleCancel()
+    drawer.value = update.value = false
     initData()
     loading.value = false
   }).catch(() => {
     loading.value = false
   })
 }
-
+// 编辑
+const handleEdit = async (index, row) => {
+  await getSysUserById(row.id).then((data) => {
+    update.value = true
+    addFrom.id = data.data.data.id
+    addFrom.name = data.data.data.name
+    addFrom.telephone = data.data.data.encryptedTelephone
+    addFrom.sysRoleId = data.data.data.sysRoleId
+    addFrom.status = data.data.data.status
+    drawer.value = true
+  })
+}
+// 取消
+const handleCancel = () => {
+  drawer.value = false;
+  update.value = false;
+}
 // 角色列表
 let roles = ref([])
 const rolesList = async () => {
@@ -197,47 +194,61 @@ const rolesList = async () => {
   })
 }
 
-const addformItems = computed(() => [
-  {
-    type: 'input',
-    model: 'name',
-    label: '用户名称',
-    placeholder: '请输入用户名称',
-    width: '180px',
-    clearable: true,
-  },
-  {
-    type: 'input',
-    model: 'password',
-    label: '密码',
-    placeholder: '请输入密码',
-    width: '180px',
-    clearable: true,
-  },
-  {
-    type: 'input',
-    model: 'telephone',
-    label: '电话',
-    placeholder: '请输入电话',
-    width: '180px',
-    clearable: true,
-  },
-  {
-    type: 'select',
-    model: 'sysRoleId',
-    label: '角色',
-    placeholder: '请选择角色',
-    width: '180px',
-    clearable: true,
-    options: roles.value,
-  },
-  {
-    type: 'switch',
-    model: 'status',
-    label: '启用状态',
-    clearableValue: false,
-  },
-])
+const actions = [
+  { label: '查看', handler: handleView },
+  { label: '编辑', handler: handleEdit },
+  { label: '删除', type: 'danger', handler: handleDelete },
+]
+
+const saveOrUpdateformItems = computed(() => {
+  const commonItems = [
+    {
+      type: 'input',
+      model: 'name',
+      label: '用户名称',
+      placeholder: '请输入用户名称',
+      width: '180px',
+      clearable: true,
+    },
+    {
+      type: 'input',
+      model: 'telephone',
+      label: '电话',
+      placeholder: '请输入电话',
+      width: '180px',
+      clearable: true,
+    },
+    {
+      type: 'select',
+      model: 'sysRoleId',
+      label: '角色',
+      placeholder: '请选择角色',
+      width: '180px',
+      clearable: true,
+      options: roles.value,
+    },
+    {
+      type: 'switch',
+      model: 'status',
+      label: '启用状态',
+      clearableValue: false,
+    },
+  ];
+
+  // 如果不是编辑模式，添加密码字段
+  if (!update.value) {
+    commonItems.unshift({
+      type: 'input',
+      model: 'password',
+      label: '密码',
+      placeholder: '请输入密码',
+      width: '180px',
+      clearable: true,
+    });
+  }
+
+  return commonItems;
+});
 
 // 定义表单校验规则
 const rules = reactive({
@@ -284,7 +295,7 @@ onMounted(() => {
     </div>
   </div>
   <component-add-from v-model:drawer="drawer" v-model:addFrom="addFrom" v-model:loading="loading"
-    :addformItems="addformItems" :handleCancel="handleCancel" :handleSubmit="handleSubmit" :rules="rules" />
+    :addformItems="saveOrUpdateformItems" :handleCancel="handleCancel" :handleSubmit="handleSubmit" :rules="rules" />
 </template>
 
 <style scoped>

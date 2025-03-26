@@ -14,6 +14,10 @@ export function saveOrUpdateSysUser(e) {
   return Request.put('remind/sysUser/saveOrUpdateSysUser', { ...e })
 }
 
+export function getSysUserById(e) {
+  return Request.get('remind/sysUser/getSysUserById', { params: { id: e }, noSuccessMsg: true })
+}
+
 export function listSysRole(e) {
   return Request.get('remind/sysRole/listSysRole', { params: { name: e }, noSuccessMsg: true })
 }
@@ -42,10 +46,18 @@ export function saveOrUpdateSysResource(e) {
   return Request.put('remind/sysResource/saveOrUpdateResource', { ...e })
 }
 
-export function treeResource() {
-  return Request.get('remind/sysResource/treeResource?type=route', { noSuccessMsg: true })
+export function treeResource(e) {
+  return Request.get('remind/sysResource/treeResource', { params: { type: e }, noSuccessMsg: true })
 }
 
 export function removeSysResourceByResourceId(e) {
   return Request.delete('remind/sysResource/removeByResourceId', { params: { id: e } })
+}
+
+export function saveRoleResource(e) {
+  return Request.post('remind/sysRoleResource/saveRoleResource', { ...e })
+}
+
+export function listRoleResourceByRoleId(e) {
+  return Request.get('remind/sysRoleResource/listRoleResourceByRoleId', { params: { roleId: e }, noSuccessMsg: true })
 }

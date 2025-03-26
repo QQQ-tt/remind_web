@@ -177,7 +177,7 @@ const handleSubmit = () => {
 // 路由列表
 let treeRoute = ref([])
 const rolesList = async () => {
-  await treeResource().then((data) => {
+  await treeResource('route').then((data) => {
     treeRoute.value = data.data.data
   })
 }

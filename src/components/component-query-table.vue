@@ -36,7 +36,7 @@ defineProps({
     </el-table-column>
 
     <!-- 操作列 -->
-    <el-table-column v-if="actions.length" label="操作" width="200">
+    <el-table-column v-if="actions.length" label="操作" width="220">
       <template #default="scope">
         <el-button v-for="(action, index) in actions" :key="index" :type="action.type || 'primary'" size="small"
           @click="action.handler(scope.$index, scope.row)">

@@ -9,6 +9,7 @@ const props = defineProps({
 const addFrom = defineModel('addFrom')
 const drawer = defineModel('drawer')
 const loading = defineModel('loading')
+const treeRef = defineModel('treeRef')
 
 watch(drawer, (newVal) => {
   if (!newVal) {
@@ -58,6 +59,10 @@ const defaultTime = [
           :style="{ width: item.width || '100%' }">
           <el-checkbox v-for="(opt, idx) in item.options" :key="idx" :label="opt.value">{{ opt.label }}</el-checkbox>
         </el-checkbox-group>
+        <el-tree v-else-if="item.type === 'tree'" :data="item.data" :props="item.props"
+          :default-expanded-keys="item.defaultExpandedKeys" :check-strictly="item.checkStrictly"
+          :show-checkbox="item.showCheckbox" :expand-on-click-node="item.expandOnClickNode" node-key="id"
+          :default-checked-keys="item.defaultCheckedKeys" ref="treeRef" />
       </el-form-item>
     </el-form>
     <template #footer>

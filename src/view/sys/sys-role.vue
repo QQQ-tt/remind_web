@@ -1,6 +1,6 @@
 <script setup>
-import { reactive, ref, onMounted } from 'vue'
-import { pageSysRole, saveOrUpdateSysRole, removeSysRoleByRoleId } from '@/api/sys-api.js'
+import { reactive, ref, onMounted, computed, nextTick } from 'vue'
+import { pageSysRole, saveOrUpdateSysRole, removeSysRoleByRoleId, treeResource, saveRoleResource, listRoleResourceByRoleId } from '@/api/sys-api.js'
 import ComponentPage from '@/components/component-page.vue'
 import ComponentQueryFrom from '@/components/component-query-from.vue'
 import ComponentQueryTable from '@/components/component-query-table.vue'
@@ -39,15 +39,6 @@ const tableData = reactive({
   value: [],
   total: 0,
 })
-
-// 查看、编辑、删除功能的占位函数
-const handleView = (index, row) => {
-  console.log('查看:', index, row)
-}
-
-const handleEdit = (index, row) => {
-  console.log('编辑:', index, row)
-}
 
 const handleDelete = (index, row) => {
   ElBoxMsg.confirmAction('确定删除该角色吗？', () => {
@@ -103,12 +94,6 @@ const columns = [
   },
 ]
 
-const actions = [
-  { label: '查看', handler: handleView },
-  { label: '编辑', handler: handleEdit },
-  { label: '删除', type: 'danger', handler: handleDelete },
-]
-
 // 新增
 const drawer = ref(false)
 const handleAdd = () => {
@@ -122,23 +107,106 @@ const addFrom = reactive({
   remark: '',
 })
 
-// 取消
-const handleCancel = () => {
-  drawer.value = false
-}
-
 // 提交
 const loading = ref(false)
 const handleSubmit = () => {
   loading.value = true
   saveOrUpdateSysRole(addFrom).then(() => {
-    handleCancel()
+    drawer.value = false
     initData()
     loading.value = false
   }).catch(() => {
     loading.value = false
   })
 }
+// 编辑
+const handleEdit = (index, row) => {
+  addFrom.id = row.id
+  addFrom.name = row.name
+  addFrom.status = row.status
+  addFrom.remark = row.remark
+  drawer.value = true
+}
+
+// 资源初始化
+const treeData = ref([])
+const initTreeData = async () => {
+  await treeResource().then((data) => {
+    treeData.value = data.data.data
+  })
+}
+
+const treeRef = ref(null)
+const resourceDrwaer = ref(false)
+const addResource = reactive({
+  sysRoleId: '',
+  sysResources: [],
+})
+// 设置资源
+const handleResource = async (index, row) => {
+  addResource.sysRoleId = row.id
+  await listRoleResourceByRoleId(row.id).then((data) => {
+    addResource.sysResources = data.data.data
+  })
+  resourceDrwaer.value = true
+  nextTick(() => {
+    if (treeRef.value[0]) {
+      treeRef.value[0].setCheckedKeys(addResource.sysResources || []);
+    } else {
+      console.error('treeRef 未找到');
+    }
+  });
+}
+
+const handleSubmitResource = () => {
+  loading.value = true
+  if (treeRef.value[0]) {
+    addResource.sysResources = treeRef.value[0].getCheckedKeys()
+  } else {
+    console.error('treeRef 未找到');
+  }
+  console.log(addResource.sysResources)
+  if (addResource.sysResources.length === 0) {
+    ElBoxMsg.errorMsg('请选择资源')
+    loading.value = false
+    return
+  } else {
+    saveRoleResource(addResource).then(() => {
+      resourceDrwaer.value = false
+    }).catch(() => {
+      loading.value = false
+    })
+  }
+  resourceDrwaer.value = false
+  loading.value = false
+}
+
+// 取消
+const handleCancel = () => {
+  drawer.value = false;
+  resourceDrwaer.value = false;
+}
+
+const resourceItems = computed(() => [
+  {
+    type: 'tree',
+    model: 'resourceIds',
+    data: treeData.value,
+    showCheckbox: true,
+    clearableValue: [],
+    props: {
+      children: 'children',
+      label: 'name',
+      id: 'id',
+    },
+  }
+])
+
+const actions = [
+  { label: '设置资源', handler: handleResource },
+  { label: '编辑', handler: handleEdit },
+  { label: '删除', type: 'danger', handler: handleDelete },
+]
 
 const addformItems = [
   {
@@ -175,6 +243,7 @@ const rules = reactive({
 
 onMounted(() => {
   initData()
+  initTreeData()
 })
 </script>
 
@@ -201,6 +270,9 @@ onMounted(() => {
   </div>
   <component-add-from v-model:drawer="drawer" v-model:addFrom="addFrom" v-model:loading="loading"
     :addformItems="addformItems" :handleCancel="handleCancel" :handleSubmit="handleSubmit" :rules="rules" />
+  <component-add-from v-model:drawer="resourceDrwaer" v-model:addFrom="addResource" v-model:loading="loading"
+    v-model:treeRef="treeRef" :addformItems="resourceItems" :handleCancel="handleCancel"
+    :handleSubmit="handleSubmitResource" />
 </template>
 
 <style scoped>
