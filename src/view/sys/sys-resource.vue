@@ -43,10 +43,6 @@ const handleView = (index, row) => {
   console.log('查看:', index, row)
 }
 
-const handleEdit = (index, row) => {
-  console.log('编辑:', index, row)
-}
-
 const handleDelete = (index, row) => {
   ElBoxMsg.confirmAction('确定删除该资源吗？', () => {
     removeSysResourceByResourceId(row.id).then(() => {
@@ -93,12 +89,6 @@ const columns = [
   },
 ]
 
-const actions = [
-  { label: '查看', handler: handleView },
-  { label: '编辑', handler: handleEdit },
-  { label: '删除', type: 'danger', handler: handleDelete },
-]
-
 const typeSwitch = (e) => {
   switch (e) {
     case 'route':
@@ -135,7 +125,19 @@ const drawer = ref(false)
 const handleAdd = () => {
   drawer.value = true
 }
-
+// 编辑
+const handleEdit = (index, row) => {
+  addFrom.id = row.id
+  addFrom.name = row.name
+  addFrom.url = row.url
+  addFrom.type = row.type
+  addFrom.icon = row.icon
+  addFrom.method = row.method
+  addFrom.description = row.description
+  addFrom.status = row.status
+  addFrom.parentId = row.parentId
+  drawer.value = true
+}
 const addFrom = reactive({
   id: '',
   name: '',
@@ -289,6 +291,12 @@ const rules = reactive({
     { required: true, message: '请输入类型', trigger: 'blur' },
   ],
 })
+
+const actions = [
+  { label: '查看', handler: handleView },
+  { label: '编辑', handler: handleEdit },
+  { label: '删除', type: 'danger', handler: handleDelete },
+]
 
 onMounted(() => {
   initData()
