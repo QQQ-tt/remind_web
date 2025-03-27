@@ -139,6 +139,7 @@ const addFrom = reactive({
   isRemind: false,
   remindType: '',
   frequencyId: '',
+  email: '',
   dateRange: [],
 })
 
@@ -229,6 +230,14 @@ const addformItems = computed(() => [
       { label: '邮件', value: 'remind_email' },
       { label: '微信', value: 'remind_wx' },
     ],
+  }] : []),
+  ...(addFrom.remindType === 'remind_email' ? [{
+    type: 'input',
+    model: 'email',
+    label: '邮件地址',
+    clearable: true,
+    width: '180px',
+    placeholder: '请输入邮件地址',
   }] : []),
   {
     type: 'select',

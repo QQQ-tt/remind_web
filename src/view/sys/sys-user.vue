@@ -120,7 +120,7 @@ const columns = [
   { prop: 'account', label: '账户', width: '120' },
   { prop: 'encryptedTelephone', label: '电话', width: '120' },
   { prop: 'status', label: '状态', width: '80' },
-  { prop: 'sysRoleName', label: '角色名称', width: '100' },
+  { prop: 'sysRoleName', label: '角色名称', width: '100', showOverflowTooltip: true },
   { prop: 'userType', label: '用户类型', width: 'auto', minWidth: '100' },
   {
     prop: 'createTime',
