@@ -190,7 +190,7 @@ const handleCancel = () => {
 const resourceItems = computed(() => [
   {
     type: 'tree',
-    model: 'resourceIds',
+    model: 'sysResources',
     data: treeData.value,
     showCheckbox: true,
     labelWidth: '10',
