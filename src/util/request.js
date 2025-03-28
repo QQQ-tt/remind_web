@@ -9,7 +9,7 @@ let baseURL = __BACKEND_URL__
 // 创建实例时配置默认值
 const instance = axios.create()
 
-instance.defaults.timeout = 1000
+instance.defaults.timeout = 10000
 instance.defaults.baseURL = baseURL
 
 // 添加请求拦截器

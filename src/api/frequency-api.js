@@ -24,6 +24,10 @@ export function saveOrUpdateTask(e) {
   return Request.post('remind/remindTask/saveOrUpdateTask', { ...e })
 }
 
+export function pageFrequencyTaskInfo(e) {
+  return Request.post('remind/remindTaskInfo/pageTaskInfo', { ...e }, { noSuccessMsg: true })
+}
+
 export function removeFrequencyTaskById(e) {
   return Request.delete('remind/remindTask/removeTaskById', { params: { id: e } })
 }
