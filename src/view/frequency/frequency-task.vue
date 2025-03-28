@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, onMounted, ref, computed } from 'vue'
-import { pageFrequencyTask, saveOrUpdateTask, listFrequencyRule, removeFrequencyTaskById } from '@/api/frequency-api'
+import { pageFrequencyTask, saveOrUpdateTask, listFrequencyRule, removeFrequencyTaskById, pageFrequencyTaskInfo } from '@/api/frequency-api'
 import ComponentPage from '@/components/component-page.vue'
 import ComponentQueryFrom from '@/components/component-query-from.vue'
 import ComponentQueryTable from '@/components/component-query-table.vue'
@@ -36,15 +36,6 @@ const tableData = reactive({
   value: [],
   total: 0,
 })
-
-// 查看、编辑、删除功能的占位函数
-const handleView = (index, row) => {
-  console.log('查看:', index, row)
-}
-
-const handleEdit = (index, row) => {
-  console.log('编辑:', index, row)
-}
 
 const handleDelete = (index, row) => {
   ElBoxMsg.confirmAction('确定删除该角色吗？', () => {
@@ -93,12 +84,6 @@ const columns = [
   },
 ]
 
-const actions = [
-  { label: '查看', handler: handleView },
-  { label: '编辑', handler: handleEdit },
-  { label: '删除', type: 'danger', handler: handleDelete },
-]
-
 const cycleUnitSwitch = (e) => {
   switch (e) {
     case 'hour':
@@ -127,6 +112,7 @@ const typeSwitch = (e) => {
 
 // 新增
 const drawer = ref(false)
+const update = ref(false)
 const handleAdd = () => {
   drawer.value = true
 }
@@ -169,6 +155,15 @@ const handleSubmit = () => {
   })
 }
 
+const handleEdit = (index, row) => {
+  update.value = true
+  addFrom.id = row.id
+  addFrom.name = row.name
+  addFrom.status = row.status
+  addFrom.remark = row.remark
+  drawer.value = true
+}
+
 // 频率规则
 const frequencyRuleList = ref([])
 const getFrequencyRuleList = async () => {
@@ -180,6 +175,51 @@ const getFrequencyRuleList = async () => {
   })
 }
 
+// 查看
+const dialogTableData = reactive({
+  value: [],
+  total: 0,
+})
+const dialogQueryConditions = reactive({
+  id: '',
+  remindTaskId: '',
+  pageNo: 1,
+  pageSize: 10,
+})
+const dialogTableVisible = ref(false)
+const handleView = async (index, row) => {
+  dialogTableData.value = []
+  dialogTableData.total = 0
+  dialogQueryConditions.remindTaskId = row.id
+  dialogQueryConditions.pageNo = 1
+  dialogQueryConditions.pageSize = 10
+  await pageFrequencyTaskInfo(dialogQueryConditions).then((data) => {
+    dialogTableData.value = data.data.data.records
+    dialogTableData.total = data.data.data.total
+    dialogTableVisible.value = true
+  }).catch(() => {
+    dialogTableVisible.value = false
+  })
+}
+
+const dialogHandleSearch = async (pageNo, pageSize) => {
+  dialogQueryConditions.pageNo = pageNo || 1
+  dialogQueryConditions.pageSize = pageSize || 10
+  await pageFrequencyTaskInfo(dialogQueryConditions).then((data) => {
+    dialogTableData.value = data.data.data.records
+    dialogTableData.total = data.data.data.total
+  })
+}
+
+const dialogColumns = [
+  { prop: 'id', label: '任务id', width: '128', showOverflowTooltip: true },
+  { prop: 'estimatedTime', label: '预计发送时间', width: '180', showOverflowTooltip: true },
+  { prop: 'actualTime', label: '实际发送时间', width: '180', showOverflowTooltip: true },
+  { prop: 'time', label: '执行时间', width: '180', showOverflowTooltip: true },
+  { prop: 'isSend', label: '是否发送', width: '100', showOverflowTooltip: true },
+  { prop: 'isRead', label: '是否已读', width: '100', showOverflowTooltip: true },
+]
+
 // 新增表单元数据（计算属性）
 const addformItems = computed(() => [
   {
@@ -190,14 +230,14 @@ const addformItems = computed(() => [
     width: '180px',
     clearable: true,
   },
-  {
+  ...(update.value ? [] : [{
     type: 'date',
     date_type: 'datetimerange',
     model: 'dateRange',
     label: '选择时间',
     format: 'YYYY-MM-DD HH:mm:ss',
     width: '250px',
-  },
+  },]),
   {
     type: 'input',
     model: 'remark',
@@ -213,7 +253,7 @@ const addformItems = computed(() => [
     label: '启用状态',
     clearableValue: false,
   },
-  {
+  ...(update.value ? [] : [{
     type: 'switch',
     model: 'isRemind',
     label: '是否提醒',
@@ -248,8 +288,14 @@ const addformItems = computed(() => [
     width: '180px',
     clearable: true,
     options: frequencyRuleList.value,
-  },
+  },]),
 ])
+
+const actions = [
+  { label: '查看', handler: handleView },
+  { label: '编辑', handler: handleEdit },
+  { label: '删除', type: 'danger', handler: handleDelete },
+]
 
 // 定义表单校验规则
 const rules = reactive({
@@ -306,6 +352,23 @@ onMounted(() => {
   </div>
   <component-add-from v-model:drawer="drawer" v-model:addFrom="addFrom" v-model:loading="loading"
     :addformItems="addformItems" :handleCancel="handleCancel" :handleSubmit="handleSubmit" :rules="rules" />
+  <el-dialog v-model="dialogTableVisible" title="Shipping address" width="900" style="padding-bottom: 48px;">
+    <component-query-table :tableData="dialogTableData.value" :columns="dialogColumns">
+      <template #isSend="{ row }">
+        <el-tag :type="row.isSend ? 'success' : 'danger'">
+          {{ row.isSend ? '已发送' : '未发送' }}
+        </el-tag>
+      </template>
+      <template #isRead="{ row }">
+        <el-tag :type="row.isRead ? 'success' : 'danger'">
+          {{ row.isRead ? '已读' : '未读' }}
+        </el-tag>
+      </template>
+    </component-query-table>
+    <div class="pagination-wrap">
+      <component-page :total="dialogTableData.total" :list-page="dialogHandleSearch" />
+    </div>
+  </el-dialog>
 </template>
 
 <style scoped>
