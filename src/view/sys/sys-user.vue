@@ -48,11 +48,6 @@ const tableData = reactive({
   total: 0,
 })
 
-// 查看、编辑、删除功能的占位函数
-const handleView = (index, row) => {
-  console.log('查看:', index, row)
-}
-
 const handleDelete = (index, row) => {
   ElBoxMsg.confirmAction('确定删除该用户吗？', () => {
     removeSysUserByUserId(row.id).then(() => {
@@ -149,6 +144,7 @@ const addFrom = reactive({
   id: '',
   name: '',
   password: '',
+  confirmPassword: '',
   telephone: '',
   sysRoleId: '',
   status: 'false',
@@ -158,7 +154,9 @@ const addFrom = reactive({
 const loading = ref(false)
 const handleSubmit = () => {
   loading.value = true
-  saveOrUpdateSysUser(addFrom).then(() => {
+  const submitData = { ...addFrom }
+  delete submitData.confirmPassword
+  saveOrUpdateSysUser(submitData).then(() => {
     drawer.value = update.value = false
     initData()
     loading.value = false
@@ -195,61 +193,70 @@ const rolesList = async () => {
 }
 
 const actions = [
-  { label: '查看', handler: handleView },
   { label: '编辑', handler: handleEdit },
   { label: '删除', type: 'danger', handler: handleDelete },
 ]
 // 新增或编辑表单元数据，动态roles.value（computed）
-const saveOrUpdateformItems = computed(() => {
-  const commonItems = [
+const saveOrUpdateformItems = computed(() => [
+  {
+    type: 'input',
+    model: 'name',
+    label: '用户名称',
+    placeholder: '请输入用户名称',
+    width: '180px',
+    clearable: true,
+  },
+  ...(update.value ? [] : [
     {
-      type: 'input',
-      model: 'name',
-      label: '用户名称',
-      placeholder: '请输入用户名称',
-      width: '180px',
-      clearable: true,
-    },
-    {
-      type: 'input',
-      model: 'telephone',
-      label: '电话',
-      placeholder: '请输入电话',
-      width: '180px',
-      clearable: true,
-    },
-    {
-      type: 'select',
-      model: 'sysRoleId',
-      label: '角色',
-      placeholder: '请选择角色',
-      width: '180px',
-      clearable: true,
-      options: roles.value,
-    },
-    {
-      type: 'switch',
-      model: 'status',
-      label: '启用状态',
-      clearableValue: false,
-    },
-  ];
-
-  // 如果不是编辑模式，添加密码字段
-  if (!update.value) {
-    commonItems.unshift({
       type: 'input',
       model: 'password',
       label: '密码',
       placeholder: '请输入密码',
       width: '180px',
       clearable: true,
-    });
+    },
+    {
+      type: 'input',
+      model: 'confirmPassword',
+      label: '确认密码',
+      placeholder: '请再次输入密码',
+      width: '180px',
+      clearable: true,
+    },
+  ]),
+  {
+    type: 'input',
+    model: 'telephone',
+    label: '电话',
+    placeholder: '请输入电话',
+    width: '180px',
+    clearable: true,
+  },
+  {
+    type: 'select',
+    model: 'sysRoleId',
+    label: '角色',
+    placeholder: '请选择角色',
+    width: '180px',
+    clearable: true,
+    options: roles.value,
+  },
+  {
+    type: 'switch',
+    model: 'status',
+    label: '启用状态',
+    clearableValue: false,
   }
-
-  return commonItems;
-});
-
+]);
+const rePasswordValid = (rule, value, callback) => {
+  if (value === null || value === '') {
+    return callback(new Error('请再次确认密码'))
+  } else if (addFrom.value.password !== value) {
+    return callback(new Error('两次输入密码不一致'))
+  } else {
+    callback()
+  }
+}
 // 定义表单校验规则
 const rules = reactive({
   name: [
@@ -257,6 +264,9 @@ const rules = reactive({
   ],
   password: [
     { required: true, message: '请输入密码', trigger: 'blur' },
+  ],
+  confirmPassword: [
+    { required: true, message: '请再次输入密码', trigger: 'blur', validator: rePasswordValid },
   ],
   telephone: [
     { required: true, message: '请输入电话', trigger: 'blur' },

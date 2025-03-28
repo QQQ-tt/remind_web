@@ -72,9 +72,10 @@ const columns = [
   { prop: 'name', label: '任务名称', width: '120', showOverflowTooltip: true },
   { prop: 'startTime', label: '开始时间', width: '180', showOverflowTooltip: true },
   { prop: 'endTime', label: '结束时间', width: '180', showOverflowTooltip: true },
+  { prop: 'status', label: '任务状态', width: '100', showOverflowTooltip: true },
   { prop: 'pushNum', label: '推送次数', width: '100' },
   { prop: 'num', label: '提醒次数', width: '100' },
-  { prop: 'status', label: '任务状态', width: '100', showOverflowTooltip: true },
+  { prop: 'isFinish', label: '完成状态', width: '100', showOverflowTooltip: true },
   { prop: 'remark', label: '备注', width: 'auto', minWidth: '100', showOverflowTooltip: true },
   {
     prop: 'createTime',
@@ -291,6 +292,11 @@ onMounted(() => {
       <template #status="{ row }">
         <el-tag :type="row.status ? 'success' : 'danger'">
           {{ row.status ? '启用' : '禁用' }}
+        </el-tag>
+      </template>
+      <template #isFinish="{ row }">
+        <el-tag :type="row.isFinish ? 'success' : 'danger'">
+          {{ row.isFinish ? '完成' : '未完成' }}
         </el-tag>
       </template>
     </component-query-table>

@@ -38,11 +38,6 @@ const tableData = reactive({
   total: 0,
 })
 
-// 查看、编辑、删除功能的占位函数
-const handleView = (index, row) => {
-  console.log('查看:', index, row)
-}
-
 const handleDelete = (index, row) => {
   ElBoxMsg.confirmAction('确定删除该资源吗？', () => {
     removeSysResourceByResourceId(row.id).then(() => {
@@ -293,7 +288,6 @@ const rules = reactive({
 })
 
 const actions = [
-  { label: '查看', handler: handleView },
   { label: '编辑', handler: handleEdit },
   { label: '删除', type: 'danger', handler: handleDelete },
 ]
