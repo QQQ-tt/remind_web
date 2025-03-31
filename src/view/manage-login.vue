@@ -15,6 +15,13 @@ const registerData = ref({
 
 const isRemember = ref(false) // 新增：控制"记住我"状态
 
+// 定义背景图片数组
+const backgroundImages = [
+  new URL('@/asset/7410e50e0b00bdf12.jpg', import.meta.url).href,
+  new URL('@/asset/2d18b96e458cb315.jpg', import.meta.url).href,
+]
+const randomBackground = ref(backgroundImages[Math.floor(Math.random() * backgroundImages.length)])
+
 // 登录
 const login = async () => {
   loading.value = true
@@ -40,7 +47,8 @@ const login = async () => {
 
 <template>
   <el-row class="login-page">
-    <el-col :span="12" class="bg"></el-col>
+    <el-col :span="12" class="bg"
+      :style="{ backgroundImage: `url(${randomBackground})`, backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }"></el-col>
     <el-col :span="6" :offset="3" class="form">
       <!-- 登录表单 -->
       <el-form ref="fromRegister" size="large" autocomplete="off" :model="registerData">
@@ -94,7 +102,6 @@ const login = async () => {
   background-color: #fff;
 
   .bg {
-    background: url('@/asset/1727451625242.jpg') no-repeat center;
     background-size: cover;
     border-radius: 0 20px 20px 0;
   }
