@@ -16,28 +16,21 @@ const menuSelect = (key) => {
 }
 // 过滤出需要显示的路由
 const sidebarRoutes = computed(() => {
-  const parentRoutes = routes.filter((route) => route.children.length && route.meta.title)
-  let allMateTitle = routes.filter((route) => route.meta && route.meta.title)
-  parentRoutes.forEach((p) => {
-    p.children.forEach((child) => {
-      allMateTitle = allMateTitle.filter((a) => child.name !== a.name)
-    })
-  })
-  return allMateTitle
+  const parentRoutes = routes.filter(route => route.children.length && route.meta?.title);
+  const allRoutesWithTitle = routes.filter(route => route.meta?.title);
+  // 过滤掉子路由，保留顶级路由和独立的路由
+  const filteredRoutes = allRoutesWithTitle.filter(route => {
+    // 如果该路由是子路由，则不保留
+    return !parentRoutes.some(parent => parent.children.some(child => child.name === route.name));
+  });
+  return filteredRoutes;
 })
 </script>
 
 <template>
   <div class="sidebar-wrapper">
-    <el-menu
-      :default-active="activeMenu"
-      class="sidebar-menu"
-      background-color="#fff"
-      text-color="#333"
-      active-text-color="#409EFF"
-      unique-opened
-      @select="menuSelect"
-    >
+    <el-menu :default-active="activeMenu" class="sidebar-menu" background-color="#fff" text-color="#333"
+      active-text-color="#409EFF" unique-opened @select="menuSelect">
       <h5 class="mb-2">Remind</h5>
       <!-- 动态渲染菜单项 -->
       <template v-for="route in sidebarRoutes" :key="route.name">
@@ -81,9 +74,12 @@ const sidebarRoutes = computed(() => {
   width: 190px;
   background: #fff;
   border-radius: 12px;
-  padding: 15px 10px; /* 增加顶部内边距 */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* 更强的阴影 */
-  transition: width 0.3s ease; /* 宽度变化动画 */
+  padding: 15px 10px;
+  /* 增加顶部内边距 */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  /* 更强的阴影 */
+  transition: width 0.3s ease;
+  /* 宽度变化动画 */
 }
 
 /* 统一菜单项样式 */
@@ -97,8 +93,10 @@ const sidebarRoutes = computed(() => {
 /* 菜单项悬停效果 */
 .el-menu-item:hover,
 :deep(.el-sub-menu__title:hover) {
-  background: rgba(62, 163, 200, 0.2); /* 更淡的悬停色 */
-  transform: scale(1.05); /* 轻微缩放 */
+  background: rgba(62, 163, 200, 0.2);
+  /* 更淡的悬停色 */
+  transform: scale(1.05);
+  /* 轻微缩放 */
 }
 
 /* 选中菜单项样式 */
@@ -106,8 +104,10 @@ const sidebarRoutes = computed(() => {
   background: linear-gradient(135deg, #409eff, #66b1ff);
   color: #fff;
   font-weight: bold;
-  padding: 12px 20px; /* 略微增加内边距 */
-  transform: translateX(3px); /* 轻微位移反馈 */
+  padding: 12px 20px;
+  /* 略微增加内边距 */
+  transform: translateX(3px);
+  /* 轻微位移反馈 */
 }
 
 /* 选中菜单项的图标颜色 */
@@ -123,7 +123,8 @@ const sidebarRoutes = computed(() => {
 
 /* 外部容器 */
 .sidebar-wrapper {
-  width: 190px; /* 适当减少宽度 */
+  width: 190px;
+  /* 适当减少宽度 */
   height: 100vh;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
   background: white;
@@ -134,6 +135,7 @@ const sidebarRoutes = computed(() => {
 .sidebar-menu {
   width: 100%;
   height: 100%;
-  border-radius: inherit; /* 继承 wrapper 的圆角 */
+  /* 继承 wrapper 的圆角 */
+  border-radius: inherit;
 }
 </style>
