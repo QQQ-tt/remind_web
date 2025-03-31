@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <details></details>
+  123
 </template>
 
 <style scoped></style>

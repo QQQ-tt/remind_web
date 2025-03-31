@@ -4,6 +4,7 @@ import { pageFrequencyRule, saveOrUpdateFrequencyRule, removeFrequencyRuleById }
 import ComponentPage from '@/components/component-page.vue'
 import ComponentQueryFrom from '@/components/component-query-from.vue'
 import ComponentQueryTable from '@/components/component-query-table.vue'
+import frequencyDetail from './frequency-detail.vue'
 import ElBoxMsg from '@/util/el-box-msg'
 
 const queryConditions = reactive({
@@ -38,12 +39,10 @@ const tableData = reactive({
 })
 
 // 查看、编辑、删除功能的占位函数
+const viewDialog = ref(false)
 const handleView = (index, row) => {
+  viewDialog.value = true
   console.log('查看:', index, row)
-}
-
-const handleEdit = (index, row) => {
-  console.log('编辑:', index, row)
 }
 
 const handleDelete = (index, row) => {
@@ -93,12 +92,6 @@ const columns = [
   },
 ]
 
-const actions = [
-  { label: '查看', handler: handleView },
-  { label: '编辑', handler: handleEdit },
-  { label: '删除', type: 'danger', handler: handleDelete },
-]
-
 const cycleUnitSwitch = (e) => {
   switch (e) {
     case 'HOUR':
@@ -127,6 +120,7 @@ const typeSwitch = (e) => {
 
 // 新增
 const drawer = ref(false)
+const update = ref(false)
 const handleAdd = () => {
   drawer.value = true
 }
@@ -164,6 +158,20 @@ const handleSubmit = () => {
     loading.value = false
   })
 }
+// 编辑
+const handleEdit = (index, row) => {
+  update.value = true
+  addFrom.id = row.id
+  addFrom.frequencyName = row.name
+  addFrom.frequencyCode = row.frequencyCode
+  addFrom.frequencyDesc = row.frequencyDesc
+  addFrom.frequencyNumber = row.frequencyNumber
+  addFrom.frequencyCycle = row.frequencyCycle
+  addFrom.cycleUnit = row.cycleUnit
+  addFrom.type = row.type
+  addFrom.status = row.status
+  drawer.value = true
+}
 
 // 新增表单元数据（计算属性）
 const addformItems = computed(() => [
@@ -199,7 +207,7 @@ const addformItems = computed(() => [
     width: '180px',
     clearable: true,
   },
-  {
+  ...(update.value ? [] : [{
     type: 'select',
     model: 'cycleUnit',
     label: '周期单位',
@@ -212,7 +220,7 @@ const addformItems = computed(() => [
       { label: '周', value: 'WEEK' },
       { label: '月', value: 'MONTH' },
     ],
-  },
+  }]),
   ...(addFrom.cycleUnit === 'WEEK' ? [
     {
       type: 'select',
@@ -241,6 +249,12 @@ const addformItems = computed(() => [
     width: '180px',
   },
 ])
+
+const actions = [
+  { label: '编辑', handler: handleEdit },
+  { label: '删除', type: 'danger', handler: handleDelete },
+  { label: '详情', handler: handleView, visible: (row) => row.cycleUnit !== 'HOUR' }
+]
 
 // 定义表单校验规则
 const rules = reactive({
@@ -298,9 +312,9 @@ onMounted(() => {
   </div>
   <component-add-from v-model:drawer="drawer" v-model:addFrom="addFrom" v-model:loading="loading"
     :addformItems="addformItems" :handleCancel="handleCancel" :handleSubmit="handleSubmit" :rules="rules" />
-  <el-dialog>
+  <el-drawer v-model="viewDialog" title="频率详情" size="70%">
     <frequency-detail :frequencyId="addFrom.id" />
-  </el-dialog>
+  </el-drawer>
 </template>
 
 <style scoped>

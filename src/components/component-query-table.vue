@@ -13,6 +13,10 @@ defineProps({
     default: () => [],
   }
 })
+
+const getFilteredActions = (actions, row) => {
+  return actions.filter(action => action.visible ? action.visible(row) : true);
+}
 </script>
 
 <template>
@@ -38,8 +42,8 @@ defineProps({
     <!-- 操作列 -->
     <el-table-column v-if="actions.length" label="操作" width="220">
       <template #default="scope">
-        <el-button v-for="(action, index) in actions" :key="index" :type="action.type || 'primary'" size="small"
-          @click="action.handler(scope.$index, scope.row)">
+        <el-button v-for="(action, index) in getFilteredActions(actions, scope.row)" :key="index"
+          :type="action.type || 'primary'" size="small" @click="action.handler(scope.$index, scope.row)">
           {{ action.label }}
         </el-button>
       </template>
