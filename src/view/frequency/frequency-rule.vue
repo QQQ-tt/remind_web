@@ -47,7 +47,7 @@ const handleEdit = (index, row) => {
 }
 
 const handleDelete = (index, row) => {
-  ElBoxMsg.confirmAction('确定删除该角色吗？', () => {
+  ElBoxMsg.confirmAction('确定删除该频率吗？', () => {
     removeFrequencyRuleById(row.id).then(() => {
       initData()
     })
@@ -298,6 +298,9 @@ onMounted(() => {
   </div>
   <component-add-from v-model:drawer="drawer" v-model:addFrom="addFrom" v-model:loading="loading"
     :addformItems="addformItems" :handleCancel="handleCancel" :handleSubmit="handleSubmit" :rules="rules" />
+  <el-dialog>
+    <frequency-detail :frequencyId="addFrom.id" />
+  </el-dialog>
 </template>
 
 <style scoped>

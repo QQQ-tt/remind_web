@@ -38,7 +38,7 @@ const tableData = reactive({
 })
 
 const handleDelete = (index, row) => {
-  ElBoxMsg.confirmAction('确定删除该角色吗？', () => {
+  ElBoxMsg.confirmAction('确定删除该任务吗？', () => {
     removeFrequencyTaskById(row.id).then(() => {
       initData()
     })
