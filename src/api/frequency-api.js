@@ -31,3 +31,15 @@ export function pageFrequencyTaskInfo(e) {
 export function removeFrequencyTaskById(e) {
   return Request.delete('remind/remindTask/removeTaskById', { params: { id: e } })
 }
+
+export function pageFrequencyDetail(e) {
+  return Request.post('remind/frequencyDetail/pageFrequencyDetail', { ...e }, { noSuccessMsg: true })
+}
+
+export function saveOrUpdateFrequencyDetail(e) {
+  return Request.post('remind/frequencyDetail/saveOrUpdateFrequencyDetail', { ...e })
+}
+
+export function removeFrequencyDetailById(e) {
+  return Request.delete('remind/frequencyDetail/removeFrequencyDetailById', { params: { id: e } })
+}

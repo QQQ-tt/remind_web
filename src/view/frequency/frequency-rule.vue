@@ -40,9 +40,12 @@ const tableData = reactive({
 
 // 查看、编辑、删除功能的占位函数
 const viewDialog = ref(false)
+const frequencyId = ref('')
+const cycleUnit = ref('')
 const handleView = (index, row) => {
+  frequencyId.value = row.id
+  cycleUnit.value = row.cycleUnit
   viewDialog.value = true
-  console.log('查看:', index, row)
 }
 
 const handleDelete = (index, row) => {
@@ -100,8 +103,6 @@ const cycleUnitSwitch = (e) => {
       return '天'
     case 'WEEK':
       return '周'
-    case 'MONTH':
-      return '月'
     default:
       return ''
   }
@@ -313,7 +314,7 @@ onMounted(() => {
   <component-add-from v-model:drawer="drawer" v-model:addFrom="addFrom" v-model:loading="loading"
     :addformItems="addformItems" :handleCancel="handleCancel" :handleSubmit="handleSubmit" :rules="rules" />
   <el-drawer v-model="viewDialog" title="频率详情" size="70%">
-    <frequency-detail :frequencyId="addFrom.id" />
+    <frequency-detail v-model:frequencyId="frequencyId" v-model:cycleUnit="cycleUnit" />
   </el-drawer>
 </template>
 

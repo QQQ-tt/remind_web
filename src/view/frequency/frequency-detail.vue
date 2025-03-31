@@ -1,23 +1,31 @@
 <script setup>
-import { reactive, ref, onMounted, computed } from 'vue'
-import { pageFrequencyRule, saveOrUpdateFrequencyRule, removeFrequencyRuleById } from '@/api/frequency-api'
+import { reactive, ref, onMounted, computed, watch } from 'vue'
+import { pageFrequencyDetail, saveOrUpdateFrequencyDetail, removeFrequencyDetailById } from '@/api/frequency-api'
 import ComponentPage from '@/components/component-page.vue'
 import ComponentQueryTable from '@/components/component-query-table.vue'
 import ElBoxMsg from '@/util/el-box-msg'
 
+const frequencyId = defineModel('frequencyId')
+const cycleUnit = defineModel('cycleUnit')
+
 const queryConditions = reactive({
   pageNo: 1,
   pageSize: 10,
-  name: '',
+  frequencyId: frequencyId,
 })
 
 // 搜索功能
 const handleSearch = async (pageNo, pageSize) => {
+  // Removed redundant self-assignment
+  tableData.value = []
+  tableData.total = 0
   queryConditions.pageNo = pageNo || 1
   queryConditions.pageSize = pageSize || 10
-  await pageFrequencyRule(queryConditions).then((data) => {
-    tableData.value = data.data.data.records
-    tableData.total = data.data.data.total
+  await pageFrequencyDetail(queryConditions).then((data) => {
+    if (data.data.data.records !== null && data.data.data.records !== undefined) {
+      tableData.value = data.data.data.records
+      tableData.total = data.data.data.total
+    }
   })
 }
 // 初始化数据
@@ -33,7 +41,7 @@ const tableData = reactive({
 // 查看、编辑、删除功能的占位函数
 const handleDelete = (index, row) => {
   ElBoxMsg.confirmAction('确定删除该频率吗？', () => {
-    removeFrequencyRuleById(row.id).then(() => {
+    removeFrequencyDetailById(row.id).then(() => {
       initData()
     })
   }
@@ -58,14 +66,11 @@ const handleAdd = () => {
 
 const addFrom = reactive({
   id: '',
-  frequencyName: '',
-  frequencyCode: '',
-  frequencyDesc: '',
-  frequencyNumber: '',
-  frequencyCycle: '',
-  cycleUnit: '',
-  type: '',
-  status: 'false',
+  frequencyId: frequencyId,
+  frequencyWeekday: '',
+  frequencyTime: '',
+  beforeRuleTime: '',
+  afterRuleTime: '',
 })
 
 // 取消
@@ -77,11 +82,7 @@ const handleCancel = () => {
 const loading = ref(false)
 const handleSubmit = () => {
   loading.value = true
-  const submitData = { ...addFrom }
-  if (addFrom.cycleUnit !== 'WEEK') {
-    delete submitData.type
-  }
-  saveOrUpdateFrequencyRule(submitData).then(() => {
+  saveOrUpdateFrequencyDetail(addFrom).then(() => {
     handleCancel()
     initData()
     loading.value = false
@@ -93,91 +94,58 @@ const handleSubmit = () => {
 const handleEdit = (index, row) => {
   update.value = true
   addFrom.id = row.id
-  addFrom.frequencyName = row.name
-  addFrom.frequencyCode = row.frequencyCode
-  addFrom.frequencyDesc = row.frequencyDesc
-  addFrom.frequencyNumber = row.frequencyNumber
-  addFrom.frequencyCycle = row.frequencyCycle
-  addFrom.cycleUnit = row.cycleUnit
-  addFrom.type = row.type
-  addFrom.status = row.status
+  addFrom.frequencyId = row.frequencyId
+  addFrom.frequencyWeekday = row.frequencyWeekday
+  addFrom.frequencyTime = row.frequencyTime
+  addFrom.beforeRuleTime = row.beforeRuleTime
+  addFrom.afterRuleTime = row.afterRuleTime
   drawer.value = true
 }
 
 // 新增表单元数据（计算属性）
 const addformItems = computed(() => [
   {
-    type: 'input',
-    model: 'frequencyName',
-    label: '频次名称',
-    placeholder: '请输入频次名称',
+    type: 'time',
+    model: 'frequencyTime',
+    label: '提醒时间',
+    placeholder: '请输入选择时间',
     width: '180px',
-    clearable: true,
+    format: 'HH:mm:ss',
   },
-  {
-    type: 'input',
-    model: 'frequencyCode',
-    label: '频次编码',
-    placeholder: '请输入频次编码',
-    width: '180px',
-    clearable: true,
-  },
-  {
-    type: 'input',
-    model: 'frequencyNumber',
-    label: '执行次数',
-    placeholder: '请输入执行次数',
-    width: '180px',
-    clearable: true,
-  },
-  {
-    type: 'input',
-    model: 'frequencyCycle',
-    label: '频次周期',
-    placeholder: '请输入频次周期',
-    width: '180px',
-    clearable: true,
-  },
-  ...(update.value ? [] : [{
-    type: 'select',
-    model: 'cycleUnit',
-    label: '周期单位',
-    placeholder: '请选择周期单位',
-    width: '180px',
-    clearable: true,
-    options: [
-      { label: '小时', value: 'HOUR' },
-      { label: '天', value: 'DAY' },
-      { label: '周', value: 'WEEK' },
-      { label: '月', value: 'MONTH' },
-    ],
-  }]),
-  ...(addFrom.cycleUnit === 'WEEK' ? [
+  ...(cycleUnit.value === 'WEEK' ? [
     {
       type: 'select',
-      model: 'type',
-      label: '开始方式',
-      placeholder: '请选择开始方式',
+      model: 'frequencyWeekday',
+      label: '星期',
+      placeholder: '请选择星期',
       width: '180px',
       clearable: true,
       options: [
-        { label: '自然周', value: 'NATURAL_WEEK' },
-        { label: '逻辑周', value: 'LOGIC_WEEK' },
+        { label: '星期一', value: '1' },
+        { label: '星期二', value: '2' },
+        { label: '星期三', value: '3' },
+        { label: '星期四', value: '4' },
+        { label: '星期五', value: '5' },
+        { label: '星期六', value: '6' },
+        { label: '星期日', value: '7' },
       ],
-    },] : []),
+    }
+  ] : []),
   {
-    type: 'switch',
-    model: 'status',
-    label: '频次状态',
-    clearableValue: false,
+    type: 'time',
+    model: 'beforeRuleTime',
+    label: '首次(前)',
+    placeholder: '请输入选择时间',
+    width: '180px',
+    format: 'HH:mm:ss',
   },
   {
-    type: 'input',
-    model: 'frequencyDesc',
-    label: '频次描述',
-    placeholder: '请输入频次描述',
-    input_type: 'textarea',
+    type: 'time',
+    model: 'afterRuleTime',
+    label: '首次(后)',
+    placeholder: '请输入选择时间',
     width: '180px',
+    format: 'HH:mm:ss',
   },
 ])
 
@@ -188,33 +156,29 @@ const actions = [
 
 // 定义表单校验规则
 const rules = reactive({
-  frequencyName: [
-    { required: true, message: '请输入资源名称', trigger: 'blur' },
+  frequencyTime: [
+    { required: true, message: '请选择时间', trigger: 'blur' },
   ],
-  frequencyCode: [
-    { required: true, message: '请输入资源编码', trigger: 'blur' },
-  ],
-  frequencyNumber: [
-    { required: true, message: '请输入执行次数', trigger: 'blur' },
-  ],
-  frequencyCycle: [
-    { required: true, message: '请输入频次周期', trigger: 'blur' },
-  ],
-  cycleUnit: [
-    { required: true, message: '请选择周期单位', trigger: 'blur' },
-  ],
-  type: [
-    { required: addFrom.cycleUnit === 'WEEK', message: '请选择开始方式', trigger: 'blur' },
+  frequencyWeekday: [
+    { required: cycleUnit.value === 'WEEK', message: '请选择星期', trigger: 'blur' },
   ],
 })
 
 onMounted(() => {
   initData()
 })
+
+watch(
+  () => frequencyId.value,
+  () => {
+    initData()
+  },
+  { immediate: true }
+)
 </script>
 
 <template>
-  <div class="sidebar-wrapper right-align" style="margin-top: 0px;">
+  <div class="right-align" style="margin-top: 0px;">
     <el-button type="primary" @click="handleAdd">新增</el-button>
   </div>
   <div class="sidebar-wrapper table-pagination-container">

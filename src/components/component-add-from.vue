@@ -42,13 +42,17 @@ const defaultTime = [
         <el-tree-select v-else-if="item.type === 'tree-select'" @clear="handleClear(item.model, item.clearableValue)"
           v-model="addFrom[item.model]" :placeholder="item.placeholder" :check-strictly="item.checkStrictly"
           :clearable="item.clearable" :style="{ width: item.width || '100%' }" :data="item.data" :props="item.props" />
+
         <div v-else-if="item.type === 'date'" :style="{ width: item.width || '100%' }">
           <el-date-picker v-model="addFrom[item.model]" :clearable="item.clearable" :type="item.date_type"
             start-placeholder="开始时间" end-placeholder="结束时间" :format="item.format" :value-format="item.format"
             :default-time="defaultTime" />
         </div>
-        <el-time-picker v-else-if="item.type === 'time'" v-model="addFrom[item.model]" :placeholder="item.placeholder"
-          :clearable="item.clearable" :style="{ width: item.width || '100%' }" :is-range="item.isRange" />
+        <div v-else-if="item.type === 'time'" :style="{ width: item.width || '100%' }">
+          <el-time-picker v-model="addFrom[item.model]" :placeholder="item.placeholder" :clearable="item.clearable"
+            :style="{ width: item.width || '100%' }" :is-range="item.isRange" :format="item.format"
+            :value-format="item.format" />
+        </div>
         <el-switch v-else-if="item.type === 'switch'" v-model="addFrom[item.model]" inline-prompt
           style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949" :active-text="item.activeText"
           :inactive-text="item.inactiveText" :active-value="item.activeValue" :inactive-value="item.inactiveValue" />
