@@ -210,7 +210,7 @@ const addformItems = computed(() => [
     model: 'url',
     label: '地址',
     placeholder: '请输入接口地址/路由地址',
-    width: '180px',
+    width: '300px',
     clearable: true,
   },
   {
