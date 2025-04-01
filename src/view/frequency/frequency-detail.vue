@@ -182,8 +182,7 @@ watch(
     <el-button type="primary" @click="handleAdd">新增</el-button>
   </div>
   <div class="sidebar-wrapper table-pagination-container">
-    <component-query-table :tableData="tableData.value" :columns="columns" :actions="actions">
-    </component-query-table>
+    <component-query-table :tableData="tableData.value" :columns="columns" :actions="actions" />
     <div class="pagination-wrap">
       <component-page :total="tableData.total" :list-page="handleSearch" />
     </div>
