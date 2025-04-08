@@ -390,7 +390,8 @@ onMounted(() => {
   </div>
   <component-add-from v-model:drawer="drawer" v-model:addFrom="addFrom" v-model:loading="loading"
     :addformItems="addformItems" :handleCancel="handleCancel" :handleSubmit="handleSubmit" :rules="rules" />
-  <el-dialog v-model="dialogTableVisible" title="任务详情" width="900" style="padding-bottom: 48px;">
+  <el-dialog v-model="dialogTableVisible" title="任务详情" width="900"
+    :style="{ paddingBottom: activeView === 'table' ? '48px' : '0' }">
     <!-- 视图切换按钮 -->
     <el-radio-group v-model="activeView" size="small" style="margin-bottom: 12px;">
       <el-radio-button label="table">表格视图</el-radio-button>
@@ -418,7 +419,7 @@ onMounted(() => {
 
     <!-- 日历视图 -->
     <div v-if="activeView === 'calendar'">
-      <el-calendar v-model="calendarDate" @input="handleDateClick">
+      <el-calendar v-model="calendarDate" @input="handleDateClick" style="height: 580px; overflow-y: auto;">
         <template #date-cell="{ data }">
           <div style="position: relative;">
             <div>{{ data.day.split('-')[2] }}</div>
@@ -434,18 +435,18 @@ onMounted(() => {
       </el-calendar>
 
       <!-- 选中日期任务列表 -->
-      <el-dialog v-model="calendarDateInfo" width="400" style="margin-top: 16px;">
+      <el-dialog v-model="calendarDateInfo" width="400">
         <h4 style="margin-bottom: 8px;">{{ selectedDate }} 的任务</h4>
-        <el-table :data="selectedDateTasks" border size="small">
+        <el-table :data="selectedDateTasks" border size="small" height="380">
           <el-table-column prop="time" label="时间" width="180" />
-          <el-table-column prop="isSend" label="发送状态" width="100">
+          <el-table-column prop="isSend" label="发送状态" width="80">
             <template #default="{ row }">
               <el-tag :type="row.isSend ? 'success' : 'danger'">
                 {{ row.isSend ? '已发送' : '未发送' }}
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="isRead" label="阅读状态" width="100">
+          <el-table-column prop="isRead" label="阅读状态" width="auto">
             <template #default="{ row }">
               <el-tag :type="row.isRead ? 'success' : 'danger'">
                 {{ row.isRead ? '已读' : '未读' }}
