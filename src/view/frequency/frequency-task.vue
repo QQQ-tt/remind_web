@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, onMounted, ref, computed } from 'vue'
-import { pageFrequencyTask, saveOrUpdateTask, listFrequencyRule, removeFrequencyTaskById, pageFrequencyTaskInfo } from '@/api/frequency-api'
+import { pageFrequencyTask, saveOrUpdateTask, listFrequencyRule, removeFrequencyTaskById, pageFrequencyTaskInfo, listFrequencyTaskInfo } from '@/api/frequency-api'
 import ComponentPage from '@/components/component-page.vue'
 import ComponentQueryFrom from '@/components/component-query-from.vue'
 import ComponentQueryTable from '@/components/component-query-table.vue'
@@ -180,11 +180,16 @@ const dialogTableData = reactive({
   value: [],
   total: 0,
 })
+const dialogCalendarTableData = ref([])
 const dialogQueryConditions = reactive({
-  id: '',
   remindTaskId: '',
   pageNo: 1,
   pageSize: 10,
+})
+const dialogCalendarQueryConditions = reactive({
+  remindTaskId: '',
+  startTime: '',
+  endTime: '',
 })
 const dialogTableVisible = ref(false)
 const handleView = async (index, row) => {
@@ -193,6 +198,14 @@ const handleView = async (index, row) => {
   dialogQueryConditions.remindTaskId = row.id
   dialogQueryConditions.pageNo = 1
   dialogQueryConditions.pageSize = 10
+
+  dialogCalendarQueryConditions.remindTaskId = row.id
+  dialogCalendarQueryConditions.startTime = row.startTime
+  dialogCalendarQueryConditions.endTime = row.endTime
+  await listFrequencyTaskInfo(dialogCalendarQueryConditions).then((data) => {
+    dialogCalendarTableData.value = data.data.data
+  })
+
   await pageFrequencyTaskInfo(dialogQueryConditions).then((data) => {
     dialogTableData.value = data.data.data.records
     dialogTableData.total = data.data.data.total
@@ -209,6 +222,31 @@ const dialogHandleSearch = async (pageNo, pageSize) => {
     dialogTableData.value = data.data.data.records
     dialogTableData.total = data.data.data.total
   })
+}
+
+const activeView = ref('table')
+const calendarDate = ref(new Date())
+const calendarDateInfo = ref(false)
+const selectedDate = ref('')
+const selectedDateTasks = ref([])
+
+// 获取某天的任务
+function getTasksByDate(dayStr) {
+  return dialogCalendarTableData.value.filter(item =>
+    item.time?.startsWith(dayStr)
+  )
+}
+
+// 点击某一天，更新下方详细任务
+function handleDateClick(date) {
+  const day = new Date(date).toISOString().slice(0, 10)
+  selectedDate.value = day
+  selectedDateTasks.value = getTasksByDate(day)
+  if (selectedDateTasks.value.length === 0) {
+    calendarDateInfo.value = false
+    return
+  }
+  calendarDateInfo.value = true
 }
 
 const dialogColumns = [
@@ -352,8 +390,15 @@ onMounted(() => {
   </div>
   <component-add-from v-model:drawer="drawer" v-model:addFrom="addFrom" v-model:loading="loading"
     :addformItems="addformItems" :handleCancel="handleCancel" :handleSubmit="handleSubmit" :rules="rules" />
-  <el-dialog v-model="dialogTableVisible" title="Shipping address" width="900" style="padding-bottom: 48px;">
-    <component-query-table :tableData="dialogTableData.value" :columns="dialogColumns">
+  <el-dialog v-model="dialogTableVisible" title="任务详情" width="900" style="padding-bottom: 48px;">
+    <!-- 视图切换按钮 -->
+    <el-radio-group v-model="activeView" size="small" style="margin-bottom: 12px;">
+      <el-radio-button label="table">表格视图</el-radio-button>
+      <el-radio-button label="calendar">日历视图</el-radio-button>
+    </el-radio-group>
+
+    <!-- 表格视图 -->
+    <component-query-table v-if="activeView === 'table'" :tableData="dialogTableData.value" :columns="dialogColumns">
       <template #isSend="{ row }">
         <el-tag :type="row.isSend ? 'success' : 'danger'">
           {{ row.isSend ? '已发送' : '未发送' }}
@@ -365,8 +410,50 @@ onMounted(() => {
         </el-tag>
       </template>
     </component-query-table>
-    <div class="pagination-wrap">
+
+    <!-- 分页（仅表格视图显示） -->
+    <div class="pagination-wrap" v-if="activeView === 'table'">
       <component-page :total="dialogTableData.total" :list-page="dialogHandleSearch" />
+    </div>
+
+    <!-- 日历视图 -->
+    <div v-if="activeView === 'calendar'">
+      <el-calendar v-model="calendarDate" @input="handleDateClick">
+        <template #date-cell="{ data }">
+          <div style="position: relative;">
+            <div>{{ data.day.split('-')[2] }}</div>
+            <el-tooltip v-for="item in getTasksByDate(data.day).slice(0, 2)" :key="item.id" effect="dark"
+              :content="`时间：${item.time}`" placement="top">
+              <div
+                style="font-size: 12px; background-color: #f5f7fa; padding: 2px; margin-top: 2px; border-radius: 4px;">
+                {{ item.isSend ? '📤' : '❌' }} {{ item.isRead ? '📖' : '📪' }}
+              </div>
+            </el-tooltip>
+          </div>
+        </template>
+      </el-calendar>
+
+      <!-- 选中日期任务列表 -->
+      <el-dialog v-model="calendarDateInfo" width="400" style="margin-top: 16px;">
+        <h4 style="margin-bottom: 8px;">{{ selectedDate }} 的任务</h4>
+        <el-table :data="selectedDateTasks" border size="small">
+          <el-table-column prop="time" label="时间" width="180" />
+          <el-table-column prop="isSend" label="发送状态" width="100">
+            <template #default="{ row }">
+              <el-tag :type="row.isSend ? 'success' : 'danger'">
+                {{ row.isSend ? '已发送' : '未发送' }}
+              </el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column prop="isRead" label="阅读状态" width="100">
+            <template #default="{ row }">
+              <el-tag :type="row.isRead ? 'success' : 'danger'">
+                {{ row.isRead ? '已读' : '未读' }}
+              </el-tag>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-dialog>
     </div>
   </el-dialog>
 </template>

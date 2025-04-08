@@ -28,6 +28,10 @@ export function pageFrequencyTaskInfo(e) {
   return Request.post('remind/remindTaskInfo/pageTaskInfo', { ...e }, { noSuccessMsg: true })
 }
 
+export function listFrequencyTaskInfo(e) {
+  return Request.post('remind/remindTaskInfo/listTaskInfo', { ...e }, { noSuccessMsg: true })
+}
+
 export function removeFrequencyTaskById(e) {
   return Request.delete('remind/remindTask/removeTaskById', { params: { id: e } })
 }
