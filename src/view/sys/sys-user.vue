@@ -223,15 +223,15 @@ const saveOrUpdateformItems = computed(() => [
       width: '180px',
       clearable: true,
     },
+    {
+      type: 'input',
+      model: 'telephone',
+      label: '电话',
+      placeholder: '请输入电话',
+      width: '180px',
+      clearable: true,
+    },
   ]),
-  {
-    type: 'input',
-    model: 'telephone',
-    label: '电话',
-    placeholder: '请输入电话',
-    width: '180px',
-    clearable: true,
-  },
   {
     type: 'select',
     model: 'sysRoleId',
