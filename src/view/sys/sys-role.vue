@@ -166,17 +166,11 @@ const handleSubmitResource = () => {
     console.error('treeRef 未找到');
   }
   console.log(addResource.sysResources)
-  if (addResource.sysResources.length === 0) {
-    ElBoxMsg.errorMsg('请选择资源')
+  saveRoleResource(addResource).then(() => {
+    resourceDrwaer.value = false
+  }).catch(() => {
     loading.value = false
-    return
-  } else {
-    saveRoleResource(addResource).then(() => {
-      resourceDrwaer.value = false
-    }).catch(() => {
-      loading.value = false
-    })
-  }
+  })
   resourceDrwaer.value = false
   loading.value = false
 }
