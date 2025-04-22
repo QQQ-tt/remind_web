@@ -1,10 +1,12 @@
 <script setup>
-import { reactive, onMounted, ref, computed } from 'vue'
+import { reactive, onMounted, ref, computed, nextTick } from 'vue'
 import { pageFrequencyTask, saveOrUpdateTask, listFrequencyRule, removeFrequencyTaskById, pageFrequencyTaskInfo, listFrequencyTaskInfo } from '@/api/frequency-api'
 import ComponentPage from '@/components/component-page.vue'
 import ComponentQueryFrom from '@/components/component-query-from.vue'
 import ComponentQueryTable from '@/components/component-query-table.vue'
+import frequencyPdf from '@/view/frequency/frequency-pdf.vue'
 import ElBoxMsg from '@/util/el-box-msg'
+import { generatePDF } from '@/util/html-pdf'
 
 const queryConditions = reactive({
   pageNo: 1,
@@ -351,6 +353,33 @@ const rules = reactive({
   ],
 })
 
+
+const quoteData = {
+  customerName: '重庆建材',
+  paymentTerm: '现金',
+  deliveryType: '平台',
+  logistics: '德邦',
+  contactPerson: '张三',
+  address: '江苏省苏州市吴江区亨通金融中心',
+  items: [
+    { name: '水泥', spec: '50kg', quantity: '100', price: '20', amount: '2000', remark: '' },
+    { name: '砂石', spec: '30kg', quantity: '200', price: '10', amount: '2000', remark: '' },
+    { name: '钢筋', spec: '6mm', quantity: '500', price: '15', amount: '7500', remark: '' },
+  ],
+  freight: '1000',
+  discount: '1000',
+  total: '1,000,000',
+  company: '洛易达',
+  saler: '销售',
+  phone: '13834670342',
+  date: '2025 年 4 月 18 日'
+}
+// 导出pdf
+const handleExport = async () => {
+  await nextTick(); // 等待 DOM 渲染
+  generatePDF('quote-pdf', '报价单');
+};
+
 onMounted(() => {
   initData()
   getFrequencyRuleList()
@@ -358,12 +387,17 @@ onMounted(() => {
 </script>
 
 <template>
+  <!-- 隐藏 PDF 模板组件 -->
+  <div style="position: absolute; left: -9999px; top: -9999px;">
+    <frequencyPdf v-bind="quoteData" />
+  </div>
   <div class="sidebar-wrapper">
     <component-query-from v-model="queryConditions" :handleSearch="handleSearch" :handleReset="handleReset"
       :form-items="formItems" />
   </div>
   <div class="sidebar-wrapper right-align">
     <el-button type="primary" @click="handleAdd">新增</el-button>
+    <el-button type="primary" @click="handleExport">测试导出 PDF</el-button>
   </div>
   <div class="sidebar-wrapper table-pagination-container">
     <component-query-table :tableData="tableData.value" :columns="columns" :actions="actions">
