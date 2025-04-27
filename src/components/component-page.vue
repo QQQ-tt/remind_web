@@ -47,19 +47,9 @@ watchEffect(() => {
 </script>
 
 <template>
-  <el-pagination
-    v-model:current-page="pageNum"
-    v-model:page-size="pageSize"
-    :page-sizes="[10, 20, 50, 100]"
-    :small="small"
-    :disabled="disabled"
-    :background="background"
-    layout="total, sizes, prev, pager, next, jumper"
-    :total="total"
-    @size-change="handleSizeChange"
-    @current-change="handleCurrentChange"
-    class="custom-pagination"
-  />
+  <el-pagination v-model:current-page="pageNum" v-model:page-size="pageSize" :page-sizes="[10, 20, 50, 100]"
+    :small="small" :disabled="disabled" :background="background" layout="total, sizes, prev, pager, next, jumper"
+    :total="total" @size-change="handleSizeChange" @current-change="handleCurrentChange" class="custom-pagination" />
 </template>
 
 <style scoped lang="scss">
@@ -94,6 +84,7 @@ watchEffect(() => {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }

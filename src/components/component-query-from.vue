@@ -19,7 +19,7 @@ const model = defineModel()
       </el-select>
     </el-form-item>
     <el-form-item style="margin-left: auto;">
-      <el-button type="primary" @click="props.handleSearch(model.pageNo, model.pageSize)">
+      <el-button type="primary" @click="props.handleSearch(1, 10)">
         搜索
       </el-button>
       <el-button @click="props.handleReset">重置</el-button>

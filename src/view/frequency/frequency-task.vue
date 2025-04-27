@@ -19,7 +19,9 @@ const handleSearch = async (pageNo, pageSize) => {
   queryConditions.pageNo = pageNo || 1
   queryConditions.pageSize = pageSize || 10
   await pageFrequencyTask(queryConditions).then((data) => {
-    tableData.value = data.data.data.records
+    if (data.data.data.records !== null && data.data.data.records !== undefined) {
+      tableData.value = data.data.data.records
+    }
     tableData.total = data.data.data.total
   })
 }
@@ -428,8 +430,8 @@ onMounted(() => {
     :style="{ paddingBottom: activeView === 'table' ? '48px' : '0' }">
     <!-- 视图切换按钮 -->
     <el-radio-group v-model="activeView" size="small" style="margin-bottom: 12px;">
-      <el-radio-button label="table">表格视图</el-radio-button>
-      <el-radio-button label="calendar">日历视图</el-radio-button>
+      <el-radio-button value="table">表格视图</el-radio-button>
+      <el-radio-button value="calendar">日历视图</el-radio-button>
     </el-radio-group>
 
     <!-- 表格视图 -->

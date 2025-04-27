@@ -18,7 +18,9 @@ const handleSearch = async (pageNo, pageSize) => {
   queryConditions.pageNo = pageNo || 1
   queryConditions.pageSize = pageSize || 10
   await pageSysResource(queryConditions).then((data) => {
-    tableData.value = data.data.data.records
+    if (data.data.data.records !== null && data.data.data.records !== undefined) {
+      tableData.value = data.data.data.records
+    }
     tableData.total = data.data.data.total
   })
 }
