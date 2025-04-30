@@ -35,6 +35,8 @@ const initData = async () => {
 // 重置功能
 const handleReset = () => {
   queryConditions.name = ''
+  delete queryConditions.status
+  delete queryConditions.cycleUnit
   initData()
 }
 
@@ -72,6 +74,32 @@ const formItems = [
     width: '120px',
     clearable: true,
   },
+  {
+    type: 'select',
+    model: 'status',
+    label: '频次状态',
+    placeholder: '请选择频次状态',
+    width: '120px',
+    clearable: true,
+    options: [
+      { label: '启用', value: true },
+      { label: '禁用', value: false },
+    ],
+  },
+  {
+    type: 'select',
+    model: 'cycleUnit',
+    label: '周期单位',
+    placeholder: '请选择周期单位',
+    width: '120px',
+    clearable: true,
+    options: [
+      { label: '小时', value: 'HOUR' },
+      { label: '天', value: 'DAY' },
+      { label: '周', value: 'WEEK' },
+      { label: '月', value: 'MONTH' },
+    ],
+  }
 ]
 
 // 表格列元数据
@@ -141,6 +169,7 @@ const addFrom = reactive({
   cycleUnit: '',
   type: '',
   status: 'false',
+  source: 'system',
 })
 
 // 取消
