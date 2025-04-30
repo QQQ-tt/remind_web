@@ -24,6 +24,8 @@ const handleSearch = async (pageNo, pageSize) => {
   await pageFrequencyDetail(queryConditions).then((data) => {
     if (data.data.data.records !== null && data.data.data.records !== undefined) {
       tableData.value = data.data.data.records
+    } else {
+      tableData.value = []
     }
     tableData.total = data.data.data.total
   })

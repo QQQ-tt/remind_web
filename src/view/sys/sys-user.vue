@@ -26,6 +26,8 @@ const handleSearch = async (pageNo, pageSize) => {
   await pageSysUser(queryConditions).then((data) => {
     if (data.data.data.records !== null && data.data.data.records !== undefined) {
       tableData.value = data.data.data.records
+    } else {
+      tableData.value = []
     }
     tableData.total = data.data.data.total
   })
@@ -106,7 +108,7 @@ const formItems = [
     clearable: false,
     options: [
       { label: '系统用户', value: 'sys' },
-      { label: '普通用户', value: 'user' },
+      { label: '普通用户', value: 'app' },
     ],
   },
 ]
