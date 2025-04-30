@@ -177,6 +177,7 @@ const handleEdit = async (index, row) => {
     addFrom.telephone = data.data.data.encryptedTelephone
     addFrom.sysRoleId = data.data.data.sysRoleId
     addFrom.status = data.data.data.status
+    addFrom.userType = data.data.data.userType
     drawer.value = true
   })
 }
