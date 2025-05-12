@@ -73,6 +73,15 @@ const router = createRouter({
           name: 'frequencyManagementTask',
           component: () => import('@/view/frequency/frequency-task.vue'),
         },
+        {
+          path: 'feedback',
+          name: 'frequencyManagementFeedback',
+          meta: {
+            title: '反馈管理',
+            icon: 'Message'
+          },
+          component: () => import('@/view/frequency/user-feedback.vue'),
+        }
       ],
     },
     {
