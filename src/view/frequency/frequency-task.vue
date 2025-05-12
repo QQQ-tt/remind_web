@@ -4,6 +4,7 @@ import { pageFrequencyTask, saveOrUpdateTask, listFrequencyRule, removeFrequency
 import ComponentPage from '@/components/component-page.vue'
 import ComponentQueryFrom from '@/components/component-query-from.vue'
 import ComponentQueryTable from '@/components/component-query-table.vue'
+import ComponentAddFrom from '@/components/component-add-from.vue'
 import frequencyPdf from '@/view/frequency/frequency-pdf.vue'
 import ElBoxMsg from '@/util/el-box-msg'
 import { generatePDF } from '@/util/html-pdf'

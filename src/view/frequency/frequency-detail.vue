@@ -52,7 +52,7 @@ const handleDelete = (index, row) => {
 
 // 表格列元数据
 const columns = [
-  { prop: 'frequencyWeekday', label: '星期', width: '100', showOverflowTooltip: true },
+  { prop: 'frequencyWeekday', label: '星期/天', width: '100', showOverflowTooltip: true },
   { prop: 'frequencyTime', label: '提醒时间(HH:mm)', width: '100' },
   { prop: 'beforeRuleTime', label: '首次提醒时间设置(前)(HH:mm)', width: '150' },
   { prop: 'afterRuleTime', label: '首次提醒时间设置(后)(HH:mm)', width: '150' },
@@ -133,6 +133,21 @@ const addformItems = computed(() => [
       ],
     }
   ] : []),
+  ...(cycleUnit.value === 'MONTH' ? [
+    {
+      type: 'select',
+      model: 'frequencyWeekday',
+      label: '日期',
+      placeholder: '请选择日期',
+      width: '180px',
+      clearable: true,
+      options: Array.from({ length: 31 }, (_, i) => ({
+        label: `${i + 1}日`,
+        value: `${i + 1}`,
+      })),
+    },
+  ] : []
+  ),
   {
     type: 'time',
     model: 'beforeRuleTime',
@@ -163,6 +178,7 @@ const rules = reactive({
   ],
   frequencyWeekday: [
     { required: cycleUnit.value === 'WEEK', message: '请选择星期', trigger: 'blur' },
+    { required: cycleUnit.value === 'MONTH', message: '请选择日期', trigger: 'blur' },
   ],
 })
 
