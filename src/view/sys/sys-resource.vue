@@ -169,6 +169,7 @@ const handleSubmit = () => {
   saveOrUpdateSysResource(addFrom).then(() => {
     handleCancel()
     initData()
+    rolesList()
     loading.value = false
   }).catch(() => {
     loading.value = false
