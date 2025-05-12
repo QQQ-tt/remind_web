@@ -48,8 +48,7 @@ const handleDelete = (index, row) => {
     removeFrequencyTaskById(row.id).then(() => {
       initData()
     })
-  }
-  )
+  })
 }
 
 // 表单元数据

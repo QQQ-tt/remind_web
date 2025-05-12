@@ -47,3 +47,11 @@ export function saveOrUpdateFrequencyDetail(e) {
 export function removeFrequencyDetailById(e) {
   return Request.delete('remind/frequencyDetail/removeFrequencyDetailById', { params: { id: e } })
 }
+
+export function pageUserFeedback(e) {
+  return Request.post('remind/userFeedback/pageUserFeedback', { ...e }, { noSuccessMsg: true })
+}
+
+export function handlingComments(e) {
+  return Request.post('remind/userFeedback/handlingComments', { ...e })
+}
