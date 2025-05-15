@@ -136,6 +136,8 @@ const cycleUnitSwitch = (e) => {
       return '天'
     case 'WEEK':
       return '周'
+    case 'MONTH':
+      return '月'
     default:
       return ''
   }
@@ -203,6 +205,8 @@ const handleEdit = (index, row) => {
   addFrom.frequencyNumber = row.frequencyNumber
   addFrom.frequencyCycle = row.frequencyCycle
   addFrom.cycleUnit = row.cycleUnit
+  addFrom.startTime = row.startTime
+  addFrom.endTime = row.endTime
   addFrom.type = row.type
   addFrom.status = row.status
   drawer.value = true
@@ -268,6 +272,24 @@ const addformItems = computed(() => [
         { label: '自然周', value: 'NATURAL_WEEK' },
         { label: '逻辑周', value: 'LOGIC_WEEK' },
       ],
+    },] : []),
+  ...(addFrom.cycleUnit === 'HOUR' ? [
+    {
+      type: 'time',
+      model: 'startTime',
+      label: '开始时间',
+      placeholder: '请选择开始时间',
+      width: '180px',
+      format: 'HH:mm:ss',
+      clearable: true,
+    }, {
+      type: 'time',
+      model: 'endTime',
+      label: '结束时间',
+      placeholder: '请选择结束时间',
+      width: '180px',
+      format: 'HH:mm:ss',
+      clearable: true,
     },] : []),
   {
     type: 'switch',
