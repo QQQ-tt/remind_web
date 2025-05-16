@@ -85,6 +85,36 @@ const router = createRouter({
       ],
     },
     {
+      path: '/rule',
+      name: 'ruleManagement',
+      meta: {
+        title: '权益管理',
+        icon: 'Star'
+      },
+      component: () => import('@/view/container/container-layout.vue'),
+      redirect: { name: 'ruleManagementRule' },
+      children: [
+        {
+          path: 'template',
+          name: 'ruleManagementTemplate',
+          meta: {
+            title: '权益模板',
+            icon: 'Document'
+          },
+          component: () => import('@/view/rule/rule-template.vue'),
+        },
+        {
+          path: 'user',
+          name: 'ruleManagementUser',
+          meta: {
+            title: '权益用户',
+            icon: 'UserFilled'
+          },
+          component: () => import('@/view/rule/rule-user.vue'),
+        },
+      ]
+    },
+    {
       path: '/sys',
       name: 'sysManagement',
       meta: {
