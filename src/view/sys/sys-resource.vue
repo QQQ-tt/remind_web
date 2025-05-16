@@ -152,13 +152,7 @@ const addFrom = reactive({
 // 取消
 const handleCancel = () => {
   drawer.value = false
-  addFrom.name = ''
-  addFrom.url = ''
-  addFrom.type = ''
-  addFrom.icon = ''
-  addFrom.method = ''
-  addFrom.description = ''
-  addFrom.status = 'false'
+  addFrom.id = ''
   addFrom.parentId = 0
 }
 

@@ -161,7 +161,7 @@ const handleSubmit = () => {
   const submitData = { ...addFrom }
   delete submitData.confirmPassword
   saveOrUpdateSysUser(submitData).then(() => {
-    drawer.value = update.value = false
+    handleCancel()
     initData()
     loading.value = false
   }).catch(() => {
@@ -185,6 +185,7 @@ const handleEdit = async (index, row) => {
 const handleCancel = () => {
   drawer.value = false;
   update.value = false;
+  addFrom.id = ''
 }
 // 角色列表
 let roles = ref([])

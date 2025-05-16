@@ -139,6 +139,7 @@ const addFrom = reactive({
 // 取消
 const handleCancel = () => {
   drawer.value = false
+  addFrom.id = ''
 }
 
 // 提交

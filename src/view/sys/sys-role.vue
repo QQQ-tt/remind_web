@@ -116,8 +116,8 @@ const loading = ref(false)
 const handleSubmit = () => {
   loading.value = true
   saveOrUpdateSysRole(addFrom).then(() => {
-    drawer.value = false
     initData()
+    handleCancel()
     loading.value = false
   }).catch(() => {
     loading.value = false
@@ -183,6 +183,7 @@ const handleSubmitResource = () => {
 const handleCancel = () => {
   drawer.value = false;
   resourceDrwaer.value = false;
+  addFrom.id = ''
 }
 
 const resourceItems = computed(() => [

@@ -63,13 +63,14 @@ const handleEdit = async (index, row) => {
 // 取消
 const handleCancel = () => {
   drawer.value = false
+  editForm.id = ''
 }
 
 // 提交
 const handleSubmit = async () => {
   loading.value = true
   handlingComments(editForm).then(() => {
-    drawer.value = false
+    handleCancel()
     initData()
     loading.value = false
   }).catch(() => {
@@ -201,12 +202,8 @@ onMounted(() => {
 
 <template>
   <div class="sidebar-wrapper">
-    <component-query-from
-      v-model="queryConditions"
-      :handleSearch="handleSearch"
-      :handleReset="handleReset"
-      :form-items="formItems"
-    />
+    <component-query-from v-model="queryConditions" :handleSearch="handleSearch" :handleReset="handleReset"
+      :form-items="formItems" />
   </div>
   <div class="sidebar-wrapper table-pagination-container">
     <component-query-table :tableData="tableData.value" :columns="columns" :actions="actions">
@@ -225,14 +222,8 @@ onMounted(() => {
       <component-page :total="tableData.total" :list-page="handleSearch" />
     </div>
   </div>
-  <component-add-from
-    v-model:drawer="drawer"
-    v-model:addFrom="editForm"
-    v-model:loading="loading"
-    :addformItems="updateFormItems"
-    :handleCancel="handleCancel"
-    :handleSubmit="handleSubmit"
-  />
+  <component-add-from v-model:drawer="drawer" v-model:addFrom="editForm" v-model:loading="loading"
+    :addformItems="updateFormItems" :handleCancel="handleCancel" :handleSubmit="handleSubmit" />
 </template>
 
 <style scoped>
