@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, ref, onMounted, computed } from 'vue'
-import { ruleTemplatePage, saveOrUpdateRuleTemplate, updateRuleTemplateStatus } from '@/api/rule-api.js'
+import { pageRuleTemplate, saveOrUpdateRuleTemplate, updateRuleTemplateStatus } from '@/api/rule-api.js'
 import ComponentPage from '@/components/component-page.vue'
 import ComponentQueryFrom from '@/components/component-query-from.vue'
 import ComponentQueryTable from '@/components/component-query-table.vue'
@@ -9,8 +9,6 @@ import ComponentAddFrom from '@/components/component-add-from.vue'
 const queryConditions = reactive({
   pageNo: 1,
   pageSize: 10,
-  interestsLevel: null,
-  status: null,
   name: '',
 })
 
@@ -18,7 +16,7 @@ const queryConditions = reactive({
 const handleSearch = async (pageNo, pageSize) => {
   queryConditions.pageNo = pageNo || 1
   queryConditions.pageSize = pageSize || 10
-  await ruleTemplatePage(queryConditions).then((data) => {
+  await pageRuleTemplate(queryConditions).then((data) => {
     if (data.data.data.records !== null && data.data.data.records !== undefined) {
       tableData.value = data.data.data.records
     } else {
@@ -124,8 +122,6 @@ const addFrom = reactive({
   priority: '',
   description: '',
   expiredPeriodValue: '',
-  expiredPeriodUnit: 'UNKNOWN',
-  expiredPeriodType: '',
   status: 'false',
 })
 
@@ -208,12 +204,12 @@ const addformItems = computed(() => [
     width: '180px',
     placeholder: '请选择权益类型',
     options: [
-      { label: '进行中任务数量', value: 'limit_continued_task_num' },
+      { label: '每天创建任务数量', value: 'limit_create_task_day_num' },
       { label: '开启中任务数量', value: 'limit_open_task_num' },
       { label: '提醒规则数量', value: 'limit_time_rule_num' },
       { label: '每天提醒次数', value: 'limit_remind_day_num' },
       { label: '每月提醒次数', value: 'limit_remind_month_num' },
-      { label: '插屏广告数量', value: 'limit_ads_num' },
+      { label: '播放广告次数', value: 'limit_ads_num' },
     ],
   },
   {
@@ -268,8 +264,8 @@ const addformItems = computed(() => [
     width: '180px',
     placeholder: '请选择过期类型',
     options: [
-      { label: '累计时间', value: '1' },
-      { label: '指定时间', value: '2' },
+      { label: '绝对时间', value: 'ABSOLUTE_TIME' },
+      { label: '相对时间', value: 'RELATIVE_TIME' },
     ],
   },
   {
