@@ -20,7 +20,7 @@ const getFilteredActions = (actions, row) => {
 </script>
 
 <template>
-  <el-table :data="tableData" style="width: 100%" height="462" row-key="id" border stripe>
+  <el-table :data="tableData" style="width: 100%" height="468" row-key="id" border stripe>
     <el-table-column v-for="(col, index) in columns" :key="index" :prop="col.prop" :label="col.label" :width="col.width"
       :min-width="col.minWidth" :show-overflow-tooltip="col.showOverflowTooltip" :sortable="col.sortable">
       <!-- 判断是否有插槽 -->

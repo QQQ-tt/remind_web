@@ -28,6 +28,6 @@ export function getRuleUserByUserId(e) {
   return Request.get('remind/ruleUser/getRuleUserByUserId', {
     params: {
       userId: e,
-    }
+    }, noSuccessMsg: true
   })
 }

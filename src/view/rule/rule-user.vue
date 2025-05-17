@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, onMounted } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
 import { pageSysUserRule, getRuleUserByUserId } from '@/api/rule-api.js'
 import ComponentPage from '@/components/component-page.vue'
 import ComponentQueryFrom from '@/components/component-query-from.vue'
@@ -42,11 +42,32 @@ const tableData = reactive({
   total: 0,
 })
 
+const dialogTableVisible = ref(false)
+const dialogTableData = reactive({
+  value: []
+})
+
 const handleView = async (index, row) => {
   await getRuleUserByUserId(row.id).then((data) => {
-
+    if (data.data.data !== null && data.data.data !== undefined) {
+      dialogTableData.value = data.data.data
+      dialogTableVisible.value = true
+    } else {
+      dialogTableData.value = []
+    }
+  }).catch((error) => {
+    console.error('Error fetching user rule data:', error)
   })
 }
+
+const dialogColumns = [
+  { prop: 'name', label: '权益名称', width: 'auto', showOverflowTooltip: true },
+  { prop: 'useValue', label: '已使用', width: '100', showOverflowTooltip: true },
+  { prop: 'value', label: '默认值', width: '100', showOverflowTooltip: true },
+  { prop: 'startedAt', label: '开始时间', width: '180', showOverflowTooltip: true },
+  { prop: 'expiredAt', label: '过期时间', width: '180', showOverflowTooltip: true },
+  { prop: 'priority', label: '优先级', width: '100', showOverflowTooltip: true },
+]
 
 // 表单元数据
 const formItems = [
@@ -112,6 +133,11 @@ onMounted(() => {
       <component-page :total="tableData.total" :list-page="handleSearch" />
     </div>
   </div>
+
+  <el-dialog v-model="dialogTableVisible" title="权益详情" width="900">
+    <!-- 表格视图 -->
+    <component-query-table :tableData="dialogTableData.value" :columns="dialogColumns" />
+  </el-dialog>
 </template>
 
 <style scoped>
