@@ -82,8 +82,8 @@ const formItems = [
 
 // 表格列元数据
 const columns = [
-  { prop: 'code', label: '规则编码', width: '100', showOverflowTooltip: true },
-  { prop: 'name', label: '规则名称', width: '100', showOverflowTooltip: true },
+  { prop: 'code', label: '规则编码', width: '150', showOverflowTooltip: true },
+  { prop: 'name', label: '规则名称', width: '200', showOverflowTooltip: true },
   { prop: 'status', label: '状态', width: '80' },
   { prop: 'value', label: '默认值', width: '80' },
   { prop: 'ruleType', label: '权益类型', width: '100', showOverflowTooltip: true },
