@@ -99,6 +99,7 @@ const columns = [
   { prop: 'avatar', label: '头像', width: '70' },
   { prop: 'account', label: '账户', width: '120' },
   { prop: 'openId', label: '微信openId', width: '300' },
+  { prop: 'msgNum', label: '消息数量', width: '100' },
   { prop: 'interestsLevel', label: '权益等级', width: '100' },
   {
     prop: 'loginTime',
