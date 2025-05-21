@@ -256,6 +256,7 @@ const addformItems = computed(() => [
     clearable: true,
     options: [
       { label: '小时', value: 'HOUR' },
+      { label: '小时(手动触发)', value: 'HOUR_MANUAL' },
       { label: '天', value: 'DAY' },
       { label: '周', value: 'WEEK' },
       { label: '月', value: 'MONTH' },
@@ -292,6 +293,31 @@ const addformItems = computed(() => [
       format: 'HH:mm:ss',
       clearable: true,
     },] : []),
+  ...(addFrom.cycleUnit === 'HOUR_MANUAL' ? [
+    {
+      type: 'switch',
+      model: 'crossDay',
+      label: '是否跨天',
+      clearableValue: false,
+    },
+    {
+      type: 'time',
+      model: 'startTime',
+      label: '开始时间',
+      placeholder: '请选择开始时间',
+      width: '180px',
+      format: 'HH:mm:ss',
+      clearable: true,
+    }, {
+      type: 'time',
+      model: 'endTime',
+      label: '结束时间',
+      placeholder: '请选择结束时间',
+      width: '180px',
+      format: 'HH:mm:ss',
+      clearable: true,
+    }
+  ] : []),
   {
     type: 'switch',
     model: 'status',
