@@ -112,7 +112,7 @@ const handleAdd = () => {
   drawer.value = true
 }
 
-const addFrom = reactive({
+const initialAddForm = {
   id: '',
   name: '',
   code: '',
@@ -123,7 +123,10 @@ const addFrom = reactive({
   description: '',
   expiredPeriodValue: '',
   status: 'false',
-})
+}
+
+// 响应式表单对象
+const addFrom = reactive({ ...initialAddForm })
 
 // 提交
 const loading = ref(false)
@@ -164,7 +167,7 @@ const handleEdit = (index, row) => {
 // 取消
 const handleCancel = () => {
   drawer.value = false;
-  addFrom.id = ''
+  Object.assign(addFrom, initialAddForm)
 }
 
 const actions = [
@@ -242,32 +245,33 @@ const addformItems = computed(() => [
     width: '180px',
     clearable: true,
   },
-  {
-    type: 'select',
-    model: 'expiredPeriodUnit',
-    label: '过期单位',
-    clearable: true,
-    width: '180px',
-    placeholder: '请选择过期单位',
-    clearableValue: 'UNKNOWN',
-    options: [
-      { label: '无', value: 'UNKNOWN' },
-      { label: '天', value: 'DAY' },
-      { label: '月', value: 'MONTH' },
-    ],
-  },
-  {
-    type: 'select',
-    model: 'expiredPeriodType',
-    label: '过期类型',
-    clearable: true,
-    width: '180px',
-    placeholder: '请选择过期类型',
-    options: [
-      { label: '绝对时间', value: 'ABSOLUTE_TIME' },
-      { label: '相对时间', value: 'RELATIVE_TIME' },
-    ],
-  },
+  ...(addFrom.expiredPeriodValue ? [
+    {
+      type: 'select',
+      model: 'expiredPeriodUnit',
+      label: '过期单位',
+      clearable: true,
+      width: '180px',
+      placeholder: '请选择过期单位',
+      clearableValue: 'UNKNOWN',
+      options: [
+        { label: '天', value: 'DAY' },
+        { label: '月', value: 'MONTH' },
+      ],
+    },
+    {
+      type: 'select',
+      model: 'expiredPeriodType',
+      label: '过期类型',
+      clearable: true,
+      width: '180px',
+      placeholder: '请选择过期类型',
+      options: [
+        { label: '绝对时间', value: 'ABSOLUTE_TIME' },
+        { label: '相对时间', value: 'RELATIVE_TIME' },
+      ],
+    },
+  ] : []),
   {
     type: 'switch',
     model: 'status',
@@ -303,6 +307,12 @@ const rules = reactive({
   ],
   priority: [
     { required: true, message: '请输入优先级', trigger: 'blur' },
+  ],
+  expiredPeriodUnit: [
+    { required: true, message: '请选择过期单位', trigger: 'blur' },
+  ],
+  expiredPeriodType: [
+    { required: true, message: '请选择过期类型', trigger: 'blur' },
   ],
 })
 
