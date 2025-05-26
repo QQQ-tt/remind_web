@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, ref, onMounted, computed } from 'vue'
-import { pageFrequencyRule, saveOrUpdateFrequencyRule, removeFrequencyRuleById } from '@/api/frequency-api'
+import { pageFrequencyRule, saveOrUpdateFrequencyRule, removeFrequencyRuleById, updateStatus } from '@/api/frequency-api'
 import ComponentPage from '@/components/component-page.vue'
 import ComponentQueryFrom from '@/components/component-query-from.vue'
 import ComponentQueryTable from '@/components/component-query-table.vue'
@@ -213,6 +213,12 @@ const handleEdit = (index, row) => {
   drawer.value = true
 }
 
+const handleStatusChange = (row, val) => {
+  updateStatus(row.id, val).then(() => {
+    handleSearch(queryConditions.pageNo, queryConditions.pageSize)
+  })
+}
+
 // 新增表单元数据（计算属性）
 const addformItems = computed(() => [
   {
@@ -385,9 +391,10 @@ onMounted(() => {
       </template>
 
       <template #status="{ row }">
-        <el-tag :type="row.status ? 'success' : 'danger'">
-          {{ row.status ? '启用' : '禁用' }}
-        </el-tag>
+        <el-switch v-model="row.status" class="mb-2"
+          style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949" inline-prompt :active-text="'启用'"
+          :inactive-text="'禁用'" :active-value="true" :inactive-value="false"
+          @change="val => handleStatusChange(row, val)" />
       </template>
     </component-query-table>
     <div class="pagination-wrap">

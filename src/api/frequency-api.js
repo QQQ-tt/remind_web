@@ -12,6 +12,12 @@ export function listFrequencyRule() {
   return Request.get('remind/frequencyRule/listFrequency', { noSuccessMsg: true })
 }
 
+export function updateStatus(id, status) {
+  return Request.get('remind/frequencyRule/updateStatus', {
+    params: { id, status }
+  })
+}
+
 export function removeFrequencyRuleById(e) {
   return Request.delete('remind/frequencyRule/removeFrequencyById', { params: { id: e } })
 }
