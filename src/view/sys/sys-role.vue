@@ -6,6 +6,7 @@ import ComponentQueryFrom from '@/components/component-query-from.vue'
 import ComponentQueryTable from '@/components/component-query-table.vue'
 import ComponentAddFrom from '@/components/component-add-from.vue'
 import ElBoxMsg from '@/util/el-box-msg'
+import { removeFakeCheckedParents } from '@/util/string-util'
 
 const queryConditions = reactive({
   pageNo: 1,
@@ -155,7 +156,7 @@ const handleResource = async (index, row) => {
   resourceDrwaer.value = true
   nextTick(() => {
     if (treeRef.value[0]) {
-      treeRef.value[0].setCheckedKeys(addResource.sysResources || []);
+      treeRef.value[0].setCheckedKeys(removeFakeCheckedParents(treeData.value, addResource.sysResources || []) || []);
     } else {
       console.error('treeRef 未找到');
     }
@@ -192,6 +193,7 @@ const resourceItems = computed(() => [
     model: 'sysResources',
     data: treeData.value,
     showCheckbox: true,
+    // checkStrictly: true,
     labelWidth: '10',
     clearableValue: [],
     props: {
