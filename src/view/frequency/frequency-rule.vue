@@ -75,6 +75,14 @@ const formItems = [
     clearable: true,
   },
   {
+    type: 'input',
+    model: 'source',
+    label: '频次来源',
+    placeholder: '请输入频次来源',
+    width: '120px',
+    clearable: true,
+  },
+  {
     type: 'select',
     model: 'status',
     label: '频次状态',
