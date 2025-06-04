@@ -6,13 +6,14 @@ import { pageUserFeedback, handlingComments } from '@/api/frequency-api.js'
 import { onMounted, reactive, ref } from 'vue'
 import ComponentAddFrom from '@/components/component-add-from.vue'
 // 定义查询条件的响应式对象
-const queryConditions = reactive({
-  title: '',
-  type: '',
-  content: '',
+const initQueryConditions = {
+  problem: '',
+  adopted: '',
   pageNo: 1,
   pageSize: 10,
-})
+}
+
+const queryConditions = reactive({ ...initQueryConditions })
 
 // 搜索功能
 const handleSearch = async (pageNo, pageSize) => {
@@ -40,9 +41,6 @@ const initData = async () => {
 
 // 重置功能
 const handleReset = () => {
-  queryConditions.title = ''
-  queryConditions.type = ''
-  queryConditions.content = ''
   initData()
 }
 
@@ -95,16 +93,8 @@ const adoptedConverted = (e) => {
 const formItems = [
   {
     type: 'input',
-    model: 'title',
-    label: '标题',
-    placeholder: '请输入标题',
-    width: '120px',
-    clearable: true,
-  },
-  {
-    type: 'input',
-    model: 'content',
-    label: '内容',
+    model: 'problem',
+    label: '问题',
     placeholder: '请输入内容',
     width: '100px',
     clearable: true,
@@ -117,8 +107,8 @@ const formItems = [
     width: '100px',
     placeholder: '请选择反馈类型',
     options: [
-      { label: 'bug', value: 1 },
-      { label: '意见', value: 2 },
+      { label: 'bug', value: 'issue' },
+      { label: '意见', value: 'suggestion' },
     ],
   },
   {
@@ -138,10 +128,10 @@ const formItems = [
 
 // 表格列元数据
 const columns = [
-  { prop: 'title', label: '标题', width: '100', showOverflowTooltip: true },
+  { prop: 'contact', label: '联系方式', width: 'auto', showOverflowTooltip: true },
   { prop: 'type', label: '反馈类型', width: '120' },
   { prop: 'adopted', label: '处理结果', width: '100' },
-  { prop: 'content', label: '具体内容', width: 'auto', showOverflowTooltip: true },
+  { prop: 'problem', label: '具体内容', width: 'auto', showOverflowTooltip: true },
   {
     prop: 'createName',
     label: '创建人',
